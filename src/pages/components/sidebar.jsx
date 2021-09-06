@@ -1,60 +1,59 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import { useHistory, useLocation, Link } from 'react-router-dom'
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { AdminMenuList, TeacherMenuList, TAMenuList } from './sidebarRouting';
-import { role } from '../../shared'
-import HomeIcon from '@material-ui/icons/Home';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import PropTypes from "prop-types";
+import AppBar from "@material-ui/core/AppBar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import { useHistory, useLocation, Link } from "react-router-dom";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MailIcon from "@material-ui/icons/Mail";
+import MenuIcon from "@material-ui/icons/Menu";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { AdminMenuList, TeacherMenuList, TAMenuList } from "./sidebarRouting";
+import { role } from "../../shared";
+import HomeIcon from "@material-ui/icons/Home";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: "flex",
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
   },
   Link: {
-    textDecoration: 'none',
-    color: 'inherit',
+    textDecoration: "none",
+    color: "inherit",
   },
 
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
     },
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-
   },
   content: {
     flexGrow: 1,
@@ -63,9 +62,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
-  const state = useSelector((state) => state.auth)
-  const title = useSelector((state) => state.title.title)
-  console.log(state)
+  const state = useSelector((state) => state.auth);
+  const title = useSelector((state) => state.title.title);
+  console.log(state);
 
   const { window, children } = props;
   const classes = useStyles();
@@ -76,71 +75,59 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
-
-
   const drawer = (
     <div>
       <Toolbar>
-        <Typography color="secondary" variant="h5">CAMT TA System</Typography>
-
+        <Typography color="secondary" variant="h5">
+          CAMT TA System
+        </Typography>
       </Toolbar>
       <Divider />
       <List>
         <ListItem>
-          <ListItemText ><Typography color="primary" >ROLE: {role[state.role]}</Typography></ListItemText>
+          <ListItemText>
+            <Typography color="primary">ROLE: {role[state.role]}</Typography>
+          </ListItemText>
         </ListItem>
         <ListItem>
-          <ListItemText><Typography color="primary" >USERNAME: {state.username}</Typography></ListItemText>
+          <ListItemText>
+            <Typography color="primary">USERNAME: {state.username}</Typography>
+          </ListItemText>
         </ListItem>
-
       </List>
-
 
       <Divider />
       <List>
-
-
-        <Link className={classes.Link} to='/home'>
+        <Link className={classes.Link} to="/home">
           <ListItem button>
-            <ListItemIcon><HomeIcon /></ListItemIcon>
-            <ListItemText primary={'Home'} />
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Home"} />
           </ListItem>
         </Link>
-
       </List>
       <Divider />
-      {state.role == 1 && <><List>
-        {AdminMenuList.map((text, index) => (
-
-          <Link className={classes.Link} to={text.route}>
-            <ListItem button key={text.name}>
-              <ListItemIcon>{text.icon}</ListItemIcon>
-              <ListItemText primary={text.name} />
-            </ListItem>
-          </Link>
-        ))}
-      </List></>}
-     
-
-      {state.role == 3 && <> <List>
-        {TeacherMenuList.map((text, index) => (
-
-          <Link className={classes.Link} to={text.route}>
-            <ListItem button key={text.name}>
-              <ListItemIcon>{text.icon}</ListItemIcon>
-              <ListItemText primary={text.name} />
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-        <Divider /></>}
-
-
-      {state.role == 2 &&
+      {state.role == 1 && (
         <>
           <List>
-            {TAMenuList.map((text, index) => (
+            {AdminMenuList.map((text, index) => (
+              <Link className={classes.Link} to={text.route}>
+                <ListItem button key={text.name}>
+                  <ListItemIcon>{text.icon}</ListItemIcon>
+                  <ListItemText primary={text.name} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </>
+      )}
 
+      {state.role == 4 && (
+        <>
+          {" "}
+          <List>
+            {TeacherMenuList.map((text, index) => (
               <Link className={classes.Link} to={text.route}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
@@ -150,20 +137,58 @@ function ResponsiveDrawer(props) {
             ))}
           </List>
           <Divider />
-        </>}
+        </>
+      )}
+      {state.role == 3 && (
+        <>
+          <List>
+            {TAMenuList.map((text, index) => (
+              <Link className={classes.Link} to={text.route}>
+                <ListItem button key={text.name}>
+                  <ListItemIcon>{text.icon}</ListItemIcon>
+                  <ListItemText primary={text.name} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Divider />
+        </>
+      )}
+
+      {state.role == 2 && (
+        <>
+          <List>
+            {TAMenuList.map((text, index) => (
+              <Link className={classes.Link} to={text.route}>
+                <ListItem button key={text.name}>
+                  <ListItemIcon>{text.icon}</ListItemIcon>
+                  <ListItemText primary={text.name} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Divider />
+        </>
+      )}
 
       <List>
-        <ListItem button onClick={() => { console.log('log out') }}>
-          <ListItemIcon><HomeIcon /></ListItemIcon>
-          <ListItemText primary={'Logout'} />
+        <ListItem
+          button
+          onClick={() => {
+            console.log("log out");
+          }}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Logout"} />
         </ListItem>
-
-
       </List>
     </div>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <div className={classes.root}>
@@ -190,7 +215,7 @@ function ResponsiveDrawer(props) {
           <Drawer
             container={container}
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={theme.direction === "rtl" ? "right" : "left"}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{

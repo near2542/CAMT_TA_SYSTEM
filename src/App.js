@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect
 } from "react-router-dom";
 import {routers} from './shared/router'
 import {Login} from './pages/login';
@@ -40,6 +41,7 @@ function App() {
             />)}
         </Switch>
         </ResponsiveDrawer></>}
+        <Redirect to="/auth" />
     </Router>
     </>
   );

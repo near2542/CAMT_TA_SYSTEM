@@ -84,10 +84,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export const Course = () => {
+export const AssignCourse = () => {
   const dispatch = useDispatch();
   const titleName = {
-    title: "Course",
+    title: "AssignCourse",
   };
   dispatch(title(titleName));
   const classes = useStyles();
@@ -98,10 +98,10 @@ export const Course = () => {
   const [SearchBy, setSearchBy] = useState("All");
   useEffect(() => {
     if (state.role == 4) {
-      SetTableHeader(Data.course.teacher);
+      SetTableHeader(Data.assign_course.teacher);
     }
     else if (state.role == 1) {
-      SetTableHeader(Data.course.admin);
+      SetTableHeader(Data.assign_course.admin);
     }
   }, []);
   return (

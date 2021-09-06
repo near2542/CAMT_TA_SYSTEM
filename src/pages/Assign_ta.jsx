@@ -84,24 +84,24 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export const Course = () => {
+export const AssignTA = () => {
   const dispatch = useDispatch();
   const titleName = {
-    title: "Course",
+    title: "AssignTA",
   };
   dispatch(title(titleName));
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
-  const [tableHeader, SetTableHeader] = useState([]);
   console.log(state);
   const [SearchBy, setSearchBy] = useState("All");
+  const [tableHeader, SetTableHeader] = useState([]);
   useEffect(() => {
-    if (state.role == 4) {
-      SetTableHeader(Data.course.teacher);
+    if (state.role == 2) {
+      SetTableHeader(Data.assign_ta.StudentTA);
     }
-    else if (state.role == 1) {
-      SetTableHeader(Data.course.admin);
+    else if (state.role == 3){
+      SetTableHeader(Data.assign_ta.ExternalTA);
     }
   }, []);
   return (
@@ -180,15 +180,15 @@ export const Course = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                {/* <TableCell component="th" scope="row">
+              {/* <TableRow>
+                <TableCell component="th" scope="row">
                   {"test"}
                 </TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell> */}
-              </TableRow>
+                <TableCell align="right">{"test"}</TableCell>
+              </TableRow> */}
             </TableBody>
           </Table>
         </TableContainer>

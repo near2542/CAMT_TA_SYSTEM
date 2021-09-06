@@ -1,0 +1,148 @@
+{
+  "assign_ta": {
+    "StudentTA": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "Year",
+      "Semester",
+      "Teacher Name",
+      "Language",
+      "Apply For A Job"
+    ],
+    "ExternalTA": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "Year",
+      "Semester",
+      "Teacher Name",
+      "Language",
+      "Apply For A Job"
+    ]
+  },
+  "assigned_course": {
+    "StudentTA": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "Year",
+      "Semester",
+      "Teacher Name",
+      "Language",
+      "Job Status"
+    ],
+    "ExternalTA": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "Year",
+      "Semester",
+      "Teacher Name",
+      "Language",
+      "Job Status"
+    ]
+  },
+  "course": {
+    "teacher": ["Course ID", "Course Name", "Major Name", "Action"],
+    "admin": ["Course ID", "Course Name", "Major Name", "Action"]
+  },
+  "assign_course": {
+    "teacher": [
+      "Status",
+      "Semester",
+      "Year",
+      "Course ID",
+      "Course Name",
+      "Major",
+      "Section",
+      "Work Date",
+      "Work Time",
+      "Language",
+      "Hour Per Week",
+      "Action"
+    ],
+    "admin": [
+      "Status",
+      "Semester",
+      "Year",
+      "Course ID",
+      "Course Name",
+      "Major",
+      "Section",
+      "Work Date",
+      "Work Time",
+      "Language",
+      "Hour Per Week",
+      "Action"
+    ]
+  },
+  "available_course": {
+    "teacher": ["Course ID", "Course Name", "Major Name"],
+    "admin": ["Course ID", "Course Name", "Major Name"]
+  },
+  "approve_request": {
+    "teacher": [
+      "Status",
+      "Semester",
+      "Year",
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Work Date",
+      "Work Time",
+      "Language",
+      "Hour Per Week",
+      "Action"
+    ],
+    "admin": [
+      "Status",
+      "Semester",
+      "Year",
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Work Date",
+      "Work Time",
+      "Language",
+      "Hour Per Week",
+      "Action"
+    ]
+  },
+  "approve_ta": {
+    "teacher": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "TA Name",
+      "Type",
+      "Teacher Name",
+      "Day",
+      "Time",
+      "Year",
+      "semester",
+      "Profile Link",
+      "Action"
+    ],
+    "admin": [
+      "Course ID",
+      "Course Name",
+      "Section",
+      "Major Name",
+      "TA Name",
+      "Type",
+      "Teacher Name",
+      "Day",
+      "Time",
+      "Year",
+      "semester",
+      "Profile Link",
+      "Action"
+    ]
+  }
+}
