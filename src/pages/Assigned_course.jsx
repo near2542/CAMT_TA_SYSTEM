@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import { DialogContentText} from "@material-ui/core";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -28,6 +29,7 @@ import TextField from "@material-ui/core/TextField";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
+import axios from "../shared/axios";
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -87,13 +89,19 @@ const useStyles = makeStyles((theme) => ({
 export const AssignCouse = () => {
   const dispatch = useDispatch();
   const titleName = {
-    title: "AssignCouse",
+    title: "Assign Course",
   };
   dispatch(title(titleName));
   const classes = useStyles();
+  const fetchCourses = async() => {
+    const {data} = await axios.get('/assign_courses.php');
+  }
   const state = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
-  console.log(state);
+  const [createOpen, setCreateOpen] = useState(false)
+  const [currentModal,setCurrentModal] = useState({});
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [SearchBy, setSearchBy] = useState("All");
   const [tableHeader, SetTableHeader] = useState([]);
   useEffect(() => {
@@ -108,7 +116,7 @@ export const AssignCouse = () => {
       <div>
         <CssBaseline />
         <div className={classes.searchField}>
-          <div class="select">
+          {/* <div class="select">
             <FormControl required className={classes.formControl}>
               <InputLabel id="demo-simple-select-required-label">
                 Search By
@@ -161,7 +169,8 @@ export const AssignCouse = () => {
               <MenuItem value={"Teacher_Name"}>Teacher Name</MenuItem>
               <MenuItem value={"Year"}>Teacher Name</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
+          <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
         </div>
 
         <Divider />
@@ -191,7 +200,271 @@ export const AssignCouse = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        {createOpen && <CreateDialog setOpen={setCreateOpen} open={createOpen} refetch={fetchCourses} />}
+        {editOpen && <EditDialog setOpen={setEditOpen} open={editOpen} data={currentModal} refetch={fetchCourses} />}
+        {deleteOpen && <DeleteDialog setOpen={setDeleteOpen} open={deleteOpen} data={currentModal} refetch={fetchCourses} />}
       </div>
     </>
   );
 };
+
+const CreateDialog = ({ data, setOpen, open, refetch }) => {
+
+  const [form, setForm] = useState({});
+  const classes = useStyles();
+  const majorList = useSelector((state) => state.master.major);
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+
+  }
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      //request
+      await axios.post('/allcourses.php', form)
+      refetch();
+      setOpen(false);
+      alert('success');
+    }
+    catch (err) {
+      alert('something went wrong')
+      console.log(err)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+  return (
+    <div>
+      <form name="create" onSubmit={handleSubmit}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Create Course</DialogTitle>
+          <DialogContent>
+
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="course_id"
+              label="Course ID"
+              name="course_id"
+              type="text"
+              value={form.course_id}
+              onChange={handleChange}
+              fullWidth
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="course_name"
+              name="course_name"
+              value={form.course_name}
+              onChange={handleChange}
+              label="Course Name"
+              type="text"
+              fullWidth
+            />
+
+            <FormControl required className={classes.selectField}>
+              <InputLabel id="demo-simple-select-required-label">
+                Major
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-required-label"
+                id="demo-simple-select-required"
+                name="major_id"
+                onChange={handleChange}
+                value={form.major_id}
+                className={classes.selectEmpty}
+              >
+                {majorList.map(major =>
+                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                }
+
+              </Select>
+            </FormControl>
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={handleSubmit} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  )
+}
+
+
+const EditDialog = ({ data, setOpen, open, refetch }) => {
+  const [form, setForm] = useState(data)
+  const majorList = useSelector((state) => state.master.major);
+  const classes = useStyles();
+
+
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+    console.log(form)
+  }
+  const handleSubmit = async (e) => {
+    console.log('submit');
+    try {
+      e.preventDefault();
+      //request
+      await axios.patch('/allcourses.php',
+        form
+      )
+      refetch();
+      setOpen(false);
+      alert('success');
+
+    }
+    catch (err) {
+      alert('something went wrong')
+      setOpen(false);
+      console.log(err)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+  return (
+    <div>
+      <form>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Edit Course</DialogTitle>
+          <DialogContent>
+
+            <TextField
+              autoFocus
+              margin="dense"
+              id="course_id"
+              label="Course ID"
+              name="course_id"
+              type="text"
+              value={form.course_id}
+              onChange={handleChange}
+              fullWidth
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="course_name"
+              name="course_name"
+              value={form.course_name}
+              onChange={handleChange}
+              label="Course Name"
+              type="text"
+              fullWidth
+            />
+
+            <FormControl required className={classes.selectField}>
+              <InputLabel id="demo-simple-select-required-label">
+                Major
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-required-label"
+                id="demo-simple-select-required"
+                value={form.major_id}
+                onChange={handleChange}
+                className={classes.selectEmpty}
+                name="major_id"
+              >
+                {majorList.map(major =>
+                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                }
+
+              </Select>
+            </FormControl>
+
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  )
+}
+
+const DeleteDialog = ({ data, setOpen, open, refetch }) => {
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+
+
+      //request
+      await axios.delete(`/allcourses.php?id=${data.id}`)
+      refetch();
+      setOpen(false);
+      alert('success');
+    }
+    catch (err) {
+      setOpen(false);
+      alert('something went wrong')
+      console.log(err)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+  return (
+    <div>
+      <form >
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Delete Course</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to Delete <b>{data.course_id}</b> <b>{data.course_name}</b> ??
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  )
+}

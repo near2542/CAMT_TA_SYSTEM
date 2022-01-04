@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
+import clsx from 'clsx';
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -28,6 +30,7 @@ import TextField from "@material-ui/core/TextField";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
+import axios from "axios";
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -64,11 +67,20 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-
+  marginTop: {
+    marginTop: 10,
+  },
   searchField: {
     margin: theme.spacing(1, 1, 1, 1),
     display: "flex",
     alignItems: "center",
+    minWidth: 300,
+  },
+  selectField: {
+    display: 'flex',
+  },
+  dialogMin: {
+    minWidth: 300,
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -87,22 +99,53 @@ const useStyles = makeStyles((theme) => ({
 export const AssignTA = () => {
   const dispatch = useDispatch();
   const titleName = {
-    title: "AssignTA",
+    title: "Assign for TA job",
   };
   dispatch(title(titleName));
   const classes = useStyles();
+  let location = useHistory();
   const state = useSelector((state) => state.auth);
+  const assignFetch = async () => {
+    let assign = null;
+    console.log('role', state.role);
+    console.log('id', state.id);
+    assign = `/job_register.php?user=${state.id}`
+    const { data } = await axios.get(assign)
+    setassignCourse(data);
+  }
   const [open, setOpen] = useState(false);
-  console.log(state);
-  const [SearchBy, setSearchBy] = useState("All");
+  const [currentModal, setCurrentModal] = useState({});
+  const [createOpen, setCreateOpen] = useState(false);
+  const [course, setCourse] = useState(null);
+  const [assignCourse, setassignCourse] = useState([]);
+  const [teachers, setTeachers] = useState(null)
+  const [semester, setSemester] = useState(null)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
-  useEffect(() => {
+  const [SearchBy, setSearchBy] = useState("All");
+  useEffect(async () => {
+    try {
+      const course = await axios.get('/allcourses.php');
+      const teacher = await axios.get('/teachers.php');
+      const semester = await axios.get('/semester.php');
+      assignFetch();
+      setCourse(course.data);
+      setTeachers(teacher.data);
+      setSemester(semester.data);
+    }
+    catch (err) {
+
+      location.push('/auth');
+      console.log(err.number);
+    }
     if (state.role == 2) {
       SetTableHeader(Data.assign_ta.StudentTA);
     }
-    else if (state.role == 3){
+    else if (state.role == 3) {
       SetTableHeader(Data.assign_ta.ExternalTA);
     }
+
   }, []);
   return (
     <>
@@ -163,6 +206,8 @@ export const AssignTA = () => {
               <MenuItem value={"Year"}>Teacher Name</MenuItem>
             </Select>
           </FormControl>
+          {/* <Button variant="contained" color="primary" onClick={()=>setCreateOpen(true)}>Create</Button> */}
+
         </div>
 
         <Divider />
@@ -180,19 +225,160 @@ export const AssignTA = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* <TableRow>
-                <TableCell component="th" scope="row">
-                  {"test"}
-                </TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-              </TableRow> */}
+              {console.log(assignCourse)}
+              {assignCourse.map(data => (<TableRow key={data.m_course_id}>
+                <TableCell>{data.course_id}</TableCell>
+                <TableCell>{data.course_name}</TableCell>
+                <TableCell>{data.section}</TableCell>
+                <TableCell>{data.major_name}</TableCell>
+                <TableCell>{data.year}</TableCell>
+                <TableCell>{data.sem_number}</TableCell>
+                <TableCell>{`${data.f_name} ${data.l_name}` }</TableCell>
+                <TableCell>{data.language}</TableCell>
+                <TableCell>{data.day}</TableCell>
+                <TableCell>{data.t_time}</TableCell>
+                <TableCell>{data.hr_per_week}</TableCell>
+                <TableCell>{data.stu_num}</TableCell>
+                <TableCell>{data.ex_num}</TableCell>
+                <TableCell colSpan="2" style={{ textAlign: 'center' }}>
+                    {(data.r_status == null || data.r_status == 3) && <Button  variant="contained" color="primary"
+                      onClick={() => {
+                        setCurrentModal(data);
+                        setEditOpen(true);
+                      }}
+                    >Register</Button>}
+
+                    {data.r_status == 0 && <Button 
+                    onClick={() => {
+                      setCurrentModal(data);
+                      setDeleteOpen(true);
+                    }}
+                    variant="contained" color="secodnay">Cancel</Button>}
+                    {data.r_status == 1 && <Button disabled variant="contained">Approved</Button>}
+                    {data.r_status == 2 && <Button disabled variant="contained">Rejected</Button>}
+                  {/* <Button  color="secondary" onClick=
+                  {()=>  {
+                    setCurrentModal(data);
+                    setDeleteOpen(true);} 
+                  }
+                    >Delete</Button>*/}
+
+                </TableCell>               </TableRow>))
+              }
             </TableBody>
           </Table>
         </TableContainer>
+        {editOpen && <RegisterDialog setOpen={setEditOpen} semester={semester} teachers={teachers} course={course} open={editOpen} data={currentModal} refetch={assignFetch} />}
+        {deleteOpen && <CancelDialog setOpen={setDeleteOpen} open={deleteOpen} data={currentModal} refetch={assignFetch} />}
       </div>
     </>
   );
 };
+
+
+const RegisterDialog = ({ data, setOpen, open, refetch, semester, teachers, course }) => {
+  const state = useSelector((state) => state.auth);
+
+  const form = {m_course_id:data.matching_id,
+                register_id:data.register_id,
+                user_id:state.id};
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+       
+      //request
+      await axios.post(`/job_register.php`,form)
+      refetch();
+      setOpen(false);
+      alert('success');
+    }
+    catch (err) {
+      setOpen(false);
+      alert('something went wrong')
+      console.log(err)
+    }
+  }
+  const handleClose = () => {
+    setOpen(false);
+  }
+  return (
+    <div>
+      <form >
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Approve</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to Approve <b>{data.course_id}</b> <b>{data.course_name}</b> ??
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  )
+}
+
+const CancelDialog = ({ data, setOpen, open, refetch }) => {
+  const state = useSelector((state) => state.auth);
+  const {register_id} = data;
+  const form = {register_id}
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      await axios.patch(`/job_register.php`,form)
+      refetch();
+      setOpen(false);
+      alert('success');
+    }
+    catch (err) {
+      setOpen(false);
+      alert('something went wrong')
+      console.log(err)
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+  return (
+    <div>
+      <form >
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Delete Course</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to Cancel <b>{data.course_id}</b> <b>{data.course_name}</b> ??
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  )
+}
+

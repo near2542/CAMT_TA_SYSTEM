@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialState =localStorage.getItem('TAcamt-Auth')? 
@@ -33,5 +33,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const { checkAuth } = authSlice.actions; 
+export const { checkAuth,removeAuth } = authSlice.actions; 
 export default authSlice.reducer

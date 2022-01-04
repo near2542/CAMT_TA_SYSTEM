@@ -94,7 +94,6 @@ export const AvaliableCourse = () => {
   const state = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const [tableHeader, SetTableHeader] = useState([]);
-  console.log(state);
   const [SearchBy, setSearchBy] = useState("All");
   useEffect(() => {
     if (state.role == 4) {

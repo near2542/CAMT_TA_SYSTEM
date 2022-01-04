@@ -1,4 +1,6 @@
-import React from "react";
+
+import React, { useState, useEffect } from "react";
+import axios from '../../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
@@ -10,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
+import {Redirect} from 'react-router-dom'
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -20,8 +23,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { AdminMenuList, TeacherMenuList, TAMenuList } from "./sidebarRouting";
 import { role } from "../../shared";
+import { majorReducer,dayworkReducer,semesterReducer } from "../../store/masterdata";
 import HomeIcon from "@material-ui/icons/Home";
 const drawerWidth = 240;
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,9 +68,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
+  const dispatch = useDispatch()
   const state = useSelector((state) => state.auth);
   const title = useSelector((state) => state.title.title);
-  console.log(state);
 
   const { window, children } = props;
   const classes = useStyles();
@@ -74,9 +80,27 @@ function ResponsiveDrawer(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  useEffect(async ()=>{
+    try{
+    const major = await axios.get('/major.php');
+    const daywork = await axios.get('/daywork.php')
+    const semester = await axios.get('/semester.php')
+    dispatch(majorReducer(major.data)) 
+    dispatch(dayworkReducer(daywork.data)) 
+    dispatch(semesterReducer(semester.data)) 
+      
+    }
+    catch(err)
+    {
+      alert('something went wrong');
+    }
+  },
+  [])
+  
+  
   const drawer = (
     <div>
+
       <Toolbar>
         <Typography color="secondary" variant="h5">
           CAMT TA System
@@ -112,7 +136,8 @@ function ResponsiveDrawer(props) {
         <>
           <List>
             {AdminMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}>
+              
+              <Link className={classes.Link} to={text.route} key={`key${text.name}`}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -128,7 +153,7 @@ function ResponsiveDrawer(props) {
           {" "}
           <List>
             {TeacherMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}>
+              <Link className={classes.Link} to={text.route}  key={`key${text.name}`}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -143,7 +168,7 @@ function ResponsiveDrawer(props) {
         <>
           <List>
             {TAMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}>
+              <Link className={classes.Link} to={text.route}  key={`key${text.name}`}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -172,6 +197,7 @@ function ResponsiveDrawer(props) {
       )}
 
       <List>
+        <Link className={classes.Link} to="/logout">
         <ListItem
           button
           onClick={() => {
@@ -183,6 +209,7 @@ function ResponsiveDrawer(props) {
           </ListItemIcon>
           <ListItemText primary={"Logout"} />
         </ListItem>
+        </Link>
       </List>
     </div>
   );
@@ -191,9 +218,13 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
+
+  state.auth && 
     <div className={classes.root}>
+
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
+        <title>{state.role}- {title} </title>
         <Toolbar>
           <IconButton
             color="inherit"

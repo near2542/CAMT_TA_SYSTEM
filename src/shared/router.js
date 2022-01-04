@@ -1,5 +1,3 @@
-import { Login } from "../pages/login";
-import { Nomatch } from "../pages/nomatch";
 import { Homepage } from "../pages/Homepage";
 import { Course } from "../pages/Course";
 import { AssignTA } from "../pages/Assign_ta";
@@ -8,7 +6,11 @@ import { AssignCourse } from "../pages/Assign_course";
 import { AvaliableCourse } from "../pages/Available_course";
 import { ApproveRequest } from "../pages/Approve_request";
 import { ApproveTa } from "../pages/Approve_ta";
-
+import {Teacher} from '../pages/Teacher';
+import {RequestTA} from '../pages/Request_ta';
+import {Logout} from '../pages/logout';
+import { RegisterJob } from "../pages/register_job";
+import {Approved_list} from '../pages/Approve_list';
 export const routers = [
   {
     path: "/home",
@@ -41,6 +43,18 @@ export const routers = [
     component: AssignCourse,
   },
   {
+    path: "/teacher",
+    name: "teacher",
+    exact: true,
+    component: Teacher,
+  },
+  {
+    path: "/request_ta",
+    name: "Requst_TA",
+    exact: true,
+    component: RequestTA,
+  },
+  {
     path: "/available_course",
     name: "available_course",
     exact: true,
@@ -58,9 +72,23 @@ export const routers = [
     exact: true,
     component: ApproveTa,
   },
-  // {
-  //     path:'*',
-  //     name:'not match',
-  //     component:Nomatch,
-  // }
+  {
+    path: "/logout",
+    name:"logout",
+    exact:true,
+    component:Logout,
+  },
+  {
+    path: "/register_job",
+    name:"register",
+    exact:true,
+    component:RegisterJob,
+  },
+  {
+    path: "/approved_ta",
+    name:"approved_ta",
+    exact:true,
+    component:Approved_list,
+  },
+
 ];

@@ -1,10 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './auth'
 import titleSlice from './title'
+import  masterSlice  from './masterdata';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    title:titleSlice
+    title:titleSlice,
+    master:masterSlice
   }
 })
 

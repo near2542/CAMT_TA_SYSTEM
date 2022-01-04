@@ -61,7 +61,6 @@ export  function Login() {
   const state= useSelector((state)=> state.auth)  
   if(state.auth) history.push('/home')
 
-  console.log(state.auth);
   const dispatch = useDispatch();
   const classes = useStyles();
   const [OnSubmit,setOnSubmit] = useState(false);
@@ -79,9 +78,10 @@ export  function Login() {
     try{
 
     const {status,data} = await axios.post('/login.php',user);
-    console.log(data);
+    if(data.false) throw new Error(data.error);
     setLoginError(null);
-    dispatch(checkAuth(data)); 
+    dispatch(checkAuth(data));
+   
     history.push('/home')
     }
     catch(err)

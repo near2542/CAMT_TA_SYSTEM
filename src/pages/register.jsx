@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function Register() {
   
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [OnSubmit, setOnSubmit] = useState(false);
@@ -104,6 +105,8 @@ export function Register() {
     
   };
 
+
+  
   const handleClose = () => {
     setOpen(false);
   };
@@ -125,12 +128,20 @@ export function Register() {
     const response = await axios.post('/register.php',data);
     setError({...formError,username:{status:false,message:''}})
     console.log(response);
+    alert('create success');
+    history.push('/auth');
     }
     catch(err)
     {
       const {error} = err.response.data;
+      if(error.toLowerCase().indexOf('username')) {
+        let message = 'Username is already used'
+        alert(message)
+        setError({...formError,username:{status:true,message:message}})
+    }
       // setError(...formError,{username:{status:true,message:error.toString()}})
       console.log(error);
+      
       setOnSubmit(!OnSubmit)
     }
     finally{
@@ -146,7 +157,7 @@ export function Register() {
       <div className={classes.paper}>
       
         <Typography component="h6" variant="h5">
-          Already have an account? <Link href="/login">Login</Link>
+          Already have an account? <Link href="/auth">Login</Link>
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
         <FormControl component="fieldset"> 
@@ -161,7 +172,7 @@ export function Register() {
       }
       } >
         <FormControlLabel
-          value={1}
+          value={2}
           control={<Radio color="primary"/>}
           onChange={(e)=>setUser({...user,TA_type:e.target.value})}
           label="Internal"
@@ -169,7 +180,7 @@ export function Register() {
         />
 
       <FormControlLabel
-          value={2}
+          value={3}
           control={<Radio color="primary" />}
           onChange={(e)=>setUser({...user,TA_type:e.target.value})}
           label="External"

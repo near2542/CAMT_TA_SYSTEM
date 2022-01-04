@@ -9,6 +9,11 @@
       "Semester",
       "Teacher Name",
       "Language",
+      "Day Work",
+      "Student num",
+      "Time",
+      "Hour Per Week",
+      "External num",
       "Apply For A Job"
     ],
     "ExternalTA": [
@@ -58,6 +63,7 @@
       "Year",
       "Course ID",
       "Course Name",
+      
       "Major",
       "Section",
       "Work Date",
@@ -72,6 +78,7 @@
       "Year",
       "Course ID",
       "Course Name",
+      "Teacher Name",
       "Major",
       "Section",
       "Work Date",
@@ -105,9 +112,12 @@
       "Year",
       "Course ID",
       "Course Name",
+      "Major",
       "Section",
       "Work Date",
       "Work Time",
+      "Student Number",
+      "External Number",
       "Language",
       "Hour Per Week",
       "Action"
@@ -121,7 +131,6 @@
       "Major Name",
       "TA Name",
       "Type",
-      "Teacher Name",
       "Day",
       "Time",
       "Year",

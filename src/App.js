@@ -9,17 +9,13 @@ import {
 import {routers} from './shared/router'
 import {Login} from './pages/login';
 import {Register} from './pages/register';
-import {useHistory,useLocation} from 'react-router-dom'
 import ResponsiveDrawer  from './pages/components/sidebar';
-import {useSelector} from 'react-redux'
+import ReturnToAuth from './pages/returnAuth';
 function App() {
-  const test = useHistory();
-  const state= useSelector((state)=> state.auth)
   return (
     <>
     <Router>
-    
-    
+      <Route path='/' exact component={ReturnToAuth} />
       <Route 
         path='/auth'
         exact
@@ -30,7 +26,7 @@ function App() {
         exact
         component={Register}
         />
-        {state.auth && <><ResponsiveDrawer >
+    <ResponsiveDrawer >
         <Switch>
           {routers.map(route => 
           <Route 
@@ -39,9 +35,10 @@ function App() {
             exact={route.exact}
             component={route.component}
             />)}
+        <Redirect from="*" to="/auth"/>
         </Switch>
-        </ResponsiveDrawer></>}
-        <Redirect to="/auth" />
+        </ResponsiveDrawer>
+        
     </Router>
     </>
   );
