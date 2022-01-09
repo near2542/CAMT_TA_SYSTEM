@@ -231,7 +231,7 @@ const CreateDialog = ({ data, setOpen, open, refetch }) => {
       alert('success');
     }
     catch (err) {
-      alert('something went wrong')
+      alert(err)
       console.log(err)
     }
   }

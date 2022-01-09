@@ -10,7 +10,8 @@ $jwt = 'test';
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     try {
-        $sql = "SELECT * FROM course c LEFT JOIN major m ON c.major_id = m.major_id where c.deleted = 0 ORDER BY course_id,course_name,major_name";
+        $sql = "SELECT * FROM course c LEFT JOIN major m ON c.major_id = m.major_id where c.deleted = 0 
+        ORDER BY course_id,course_name,major_name";
         $row = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($row);
     } catch (Exception $e) {

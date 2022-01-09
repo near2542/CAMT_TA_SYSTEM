@@ -1,7 +1,7 @@
 <?php
 require_once('./Class/JWTauth.php');
 require_once('./db_config.php');
-use Auth\JWTauth;
+// use Auth\JWTauth;
 header("Content-Type: application/json");
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Credentials:true');

@@ -1,11 +1,8 @@
 <?php
-require_once './db_config.php';
 require('./vendor/autoload.php');
-header("Content-Type: application/json");
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Credentials:true');
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,ACCESS_TOKEN');
-header("Access-Control-Allow-Methods: GET, POST,PUT,PATCH,DELETE,OPTIONS");
+require_once './db_config.php';
+require_once './header.php';
+
 if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
     try{
@@ -31,7 +28,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 $decode = json_decode($input,true);
 if(!count((array)($decode)) || $_SERVER['REQUEST_METHOD'] !== 'POST') 
 {
-    
     echo json_encode(['status'=>'something went wrong']);
     exit(-1);
 }

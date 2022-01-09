@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from '../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -19,16 +19,16 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
-import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
+import Searchbox from './components/Searchbox';
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -71,13 +71,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
-  selectField:{
-    display:'flex',
+  selectField: {
+    display: 'flex',
 
   },
-  createButton:{
-    color:'#002884',
-    textAlign:'right',
+  createButton: {
+    color: '#002884',
+    textAlign: 'right',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -103,60 +103,57 @@ let GlobalForm = {
 
 
 export const Course = () => {
-  const [course,setCourse] = useState([]);
-  const [filterCourse,setFilterCourse] = useState([])
+  const [course, setCourse] = useState([]);
+  const [filterCourse, setFilterCourse] = useState([])
   const dispatch = useDispatch();
-  const fetchCourses = async() =>
-  {
-   const {data} = await axios.get('/allcourses.php');
+  const fetchCourses = async () => {
+    const { data } = await axios.get('/allcourses.php');
     setCourse(data);
     setFilterCourse(data)
   }
-  const [search,setSearch] = useState('')
-  
+  const [search, setSearch] = useState('')
   const titleName = {
     title: "Course",
   };
 
-  const searchData = () =>
-  {
-    let searchby = SearchBy.toLowerCase() 
-    if(searchby=== 'all')
-    {
-      setFilterCourse(course.filter(data=> {
-        return data.course_id.toLowerCase().includes(search.toLowerCase()) == true 
-        || data.course_name.toLowerCase().includes(search.toLowerCase()) == true }) )
+  const searchData = () => {
+    let searchby = SearchBy.toLowerCase()
+    if (searchby === 'all') {
+      setFilterCourse(course.filter(data => {
+        console.log(data)
+        return data.course_id.toString().toLowerCase().includes(search.toLowerCase()) == true
+          || data.course_name.toLowerCase().includes(search.toLowerCase()) == true
+      }))
     }
-    else if(searchby === 'course_id')
-    {
-      setFilterCourse(course.filter(data=> {
-        return data.course_id.toLowerCase().includes(search.toLowerCase()) == true }) )
+    else if (searchby === 'course_id') {
+      setFilterCourse(course.filter(data => {
+        return data.course_id.toString().toLowerCase().includes(search.toLowerCase()) == true
+      }))
     }
-    else if(searchby === 'course_name')
-    {
-      setFilterCourse(course.filter(data=> {
-        return data.course_name.toLowerCase().includes(search.toLowerCase()) == true }) )
+    else if (searchby === 'course_name') {
+      setFilterCourse(course.filter(data => {
+        return data.course_name.toLowerCase().includes(search.toLowerCase()) == true
+      }))
     }
-  
+
   }
 
   dispatch(title(titleName));
   const location = useHistory();
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
-  const [currentModal,setCurrentModal] = useState();
-  const [createOpen,setCreateOpen] = useState(false)
-  const [editOpen,setEditOpen] = useState(false)
-  const [deleteOpen,setDeleteOpen] = useState(false)
+  const [currentModal, setCurrentModal] = useState();
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
   useEffect(() => {
-    if(!state.auth) location.push('/auth');
-    try{
-  fetchCourses();
+    if (!state.auth) location.push('/auth');
+    try {
+      fetchCourses();
     }
-    catch(err)
-    {
+    catch (err) {
       console.log(err);
     }
     if (state.role == 4) {
@@ -166,14 +163,14 @@ export const Course = () => {
       SetTableHeader(Data.course.admin);
     }
   }, []);
-  useEffect(()=>
-  {
+  useEffect(() => {
     searchData()
-   
-  },[search,SearchBy])
+
+  }, [search, SearchBy])
   return (
     <>
       <div>
+        {/* <Searchbox/> */}
         {!state.auth && <Redirect to="/auth" />}
         <CssBaseline />
         <div className={classes.searchField}>
@@ -182,7 +179,7 @@ export const Course = () => {
               <InputLabel id="demo-simple-select-required-label">
                 Search By
               </InputLabel>
-             
+
               <Select
                 labelId="demo-simple-select-required-label"
                 id="demo-simple-select-required"
@@ -195,7 +192,7 @@ export const Course = () => {
                 </MenuItem>
                 <MenuItem value={"Course_Name"}>Course Name</MenuItem>
                 <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-         
+
               </Select>
             </FormControl>
           </div>
@@ -210,15 +207,15 @@ export const Course = () => {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
-              onChange={(e)=>setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-          
-          <Button variant="contained" color="primary" onClick={()=>setCreateOpen(true)}>Create</Button>
+
+          <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
         </div>
 
-        <Divider />
+        {/* <Divider /> */}
         <TableContainer component={Paper}>
           <Table
             className={classes.table}
@@ -233,43 +230,45 @@ export const Course = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-             
-               {filterCourse.map(data => 
-                (<>
+
+              {filterCourse.map(data =>
+              (<>
                 <TableRow key={`id_${data.id}`}>
-                 
-                <TableCell >{data.course_id}</TableCell>
-                <TableCell >{data.course_name}</TableCell>
-                <TableCell >{data.major_name}</TableCell>
-                <TableCell >
-                  <Button variant="contained" color="primary" 
-                  onClick={()=> {
-                    setCurrentModal(data);
-                    setEditOpen(true); }}
-                    >Edit</Button> 
-                  <Button  color="secondary" onClick=
-                  {()=>  {
-                    setCurrentModal(data);
-                    setDeleteOpen(true);} 
-                  }
+
+                  <TableCell >{data.course_id}</TableCell>
+                  <TableCell >{data.course_name}</TableCell>
+                  <TableCell >{data.major_name}</TableCell>
+                  <TableCell >
+                    <Button variant="contained" color="primary"
+                      onClick={() => {
+                        setCurrentModal(data);
+                        setEditOpen(true);
+                      }}
+                    >Edit</Button>
+                    <Button color="secondary" onClick=
+                      {() => {
+                        setCurrentModal(data);
+                        setDeleteOpen(true);
+                      }
+                      }
                     >Delete</Button>
-                </TableCell>
+                  </TableCell>
                 </TableRow>
-                </>)
-                )/* { <TableCell component="th" scope="row">
+              </>)
+              )/* { <TableCell component="th" scope="row">
                   {"test"}
                 </TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>} */}
-              
+
             </TableBody>
           </Table>
         </TableContainer>
-        {createOpen && <CreateDialog setOpen={setCreateOpen} open={createOpen} refetch={fetchCourses}/>}
-        {editOpen && <EditDialog setOpen={setEditOpen} open={editOpen} data={currentModal} refetch={fetchCourses}/>}
-        {deleteOpen && <DeleteDialog setOpen={setDeleteOpen} open={deleteOpen} data={currentModal} refetch={fetchCourses}/>}
+        {createOpen && <CreateDialog setOpen={setCreateOpen} open={createOpen} refetch={fetchCourses} />}
+        {editOpen && <EditDialog setOpen={setEditOpen} open={editOpen} data={currentModal} refetch={fetchCourses} />}
+        {deleteOpen && <DeleteDialog setOpen={setDeleteOpen} open={deleteOpen} data={currentModal} refetch={fetchCourses} />}
       </div>
     </>
   );
@@ -277,80 +276,77 @@ export const Course = () => {
 
 
 
-const CreateDialog = ({data,setOpen,open,refetch}) =>
-{
-  
-  const [form,setForm] = useState(GlobalForm);
+const CreateDialog = ({ data, setOpen, open, refetch }) => {
+
+  const [form, setForm] = useState(GlobalForm);
   const classes = useStyles();
   const majorList = useSelector((state) => state.master.major);
-  const handleChange =(e) =>
-  {
-    setForm({...form,
-      [e.target.name]:e.target.value})
-   
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+
   }
 
-  const handleSubmit = async (e)=>
-  {
-    try{
-    e.preventDefault();
-    //request
-    await axios.post('/allcourses.php',form)
-    refetch();
-    setOpen(false);
-    alert('success');
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      //request
+      await axios.post('/allcourses.php', form)
+      refetch();
+      setOpen(false);
+      alert('success');
     }
-    catch(err)
-    {
+    catch (err) {
       alert('something went wrong')
       console.log(err)
     }
   }
 
-  const handleClose = () =>
-  {
+  const handleClose = () => {
     setOpen(false);
   }
-  return(
+  return (
     <div>
-           <form name="create" onSubmit={handleSubmit}>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Create Course</DialogTitle>
-        <DialogContent>
-   
-        <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="course_id"
-            label="Course ID"
-            name="course_id"
-            type="text"
-            value={form.course_id}
-            onChange={handleChange}
-            fullWidth
-          />
-            <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="course_name"
-            name="course_name"
-            value={form.course_name}
-            onChange={handleChange}
-            label="Course Name"
-            type="text"
-            fullWidth
-          />
+      <form name="create" onSubmit={handleSubmit}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Create Course</DialogTitle>
+          <DialogContent>
 
-          <FormControl required className={classes.selectField}>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="course_id"
+              label="Course ID"
+              name="course_id"
+              type="text"
+              value={form.course_id}
+              onChange={handleChange}
+              fullWidth
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="course_name"
+              name="course_name"
+              value={form.course_name}
+              onChange={handleChange}
+              label="Course Name"
+              type="text"
+              fullWidth
+            />
+
+            <FormControl required className={classes.selectField}>
               <InputLabel id="demo-simple-select-required-label">
-               Major
+                Major
               </InputLabel>
               <Select
                 labelId="demo-simple-select-required-label"
@@ -360,107 +356,104 @@ const CreateDialog = ({data,setOpen,open,refetch}) =>
                 value={form.major_id}
                 className={classes.selectEmpty}
               >
-                {majorList.map(major=> 
-                (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                {majorList.map(major =>
+                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
                 }
-               
+
               </Select>
             </FormControl>
-            
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleSubmit} color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={handleSubmit} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
       </form>
     </div>
   )
 }
 
 
-const EditDialog = ({data,setOpen,open,refetch}) =>
-{
-  const [form,setForm] = useState(data)
+const EditDialog = ({ data, setOpen, open, refetch }) => {
+  const [form, setForm] = useState(data)
   const majorList = useSelector((state) => state.master.major);
   const classes = useStyles();
-  
 
 
-  const handleChange =(e) =>
-  {
-    setForm({...form,
-      [e.target.name]:e.target.value})
-      console.log(form)
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    })
+    console.log(form)
   }
-  const handleSubmit = async(e)=>
-  {
+  const handleSubmit = async (e) => {
     console.log('submit');
-    try{
-    e.preventDefault();
-    //request
-    await axios.patch('/allcourses.php',
-      form
-    )
-    refetch();
-    setOpen(false);
-    alert('success');
-    
+    try {
+      e.preventDefault();
+      //request
+      await axios.patch('/allcourses.php',
+        form
+      )
+      refetch();
+      setOpen(false);
+      alert('success');
+
     }
-    catch(err)
-    {
+    catch (err) {
       alert('something went wrong')
       setOpen(false);
       console.log(err)
     }
   }
 
-  const handleClose = () =>
-  {
+  const handleClose = () => {
     setOpen(false);
   }
-  return(
+  return (
     <div>
       <form>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Edit Course</DialogTitle>
-        <DialogContent>
-          
-        <TextField
-            autoFocus
-            margin="dense"
-            id="course_id"
-            label="Course ID"
-            name="course_id"
-            type="text"
-            value={form.course_id}
-            onChange={handleChange}
-            fullWidth
-          />
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Edit Course</DialogTitle>
+          <DialogContent>
+
             <TextField
-            autoFocus
-            margin="dense"
-            id="course_name"
-            name="course_name"
-            value={form.course_name}
-            onChange={handleChange}
-            label="Course Name"
-            type="text"
-            fullWidth
-          />
-        
-          <FormControl required className={classes.selectField}>
+              autoFocus
+              margin="dense"
+              id="course_id"
+              label="Course ID"
+              name="course_id"
+              type="text"
+              value={form.course_id}
+              onChange={handleChange}
+              fullWidth
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="course_name"
+              name="course_name"
+              value={form.course_name}
+              onChange={handleChange}
+              label="Course Name"
+              type="text"
+              fullWidth
+            />
+
+            <FormControl required className={classes.selectField}>
               <InputLabel id="demo-simple-select-required-label">
-               Major
+                Major
               </InputLabel>
               <Select
                 labelId="demo-simple-select-required-label"
@@ -470,79 +463,75 @@ const EditDialog = ({data,setOpen,open,refetch}) =>
                 className={classes.selectEmpty}
                 name="major_id"
               >
-                {majorList.map(major=> 
-                (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                {majorList.map(major =>
+                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
                 }
-               
+
               </Select>
             </FormControl>
-          
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button  type="submit" onClick={handleSubmit}  color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
       </form>
     </div>
   )
 }
 
-const DeleteDialog = ({data,setOpen,open,refetch}) =>
-{
-  
-  const handleSubmit = async (e)=>
-  {
-    try{
-    e.preventDefault();
+const DeleteDialog = ({ data, setOpen, open, refetch }) => {
 
-    
-    //request
-    await axios.delete(`/allcourses.php?id=${data.id}`)
-    refetch();
-    setOpen(false);
-    alert('success');
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+
+
+      //request
+      await axios.delete(`/allcourses.php?id=${data.id}`)
+      refetch();
+      setOpen(false);
+      alert('success');
     }
-    catch(err)
-    {
+    catch (err) {
       setOpen(false);
       alert('something went wrong')
       console.log(err)
     }
   }
 
-  const handleClose = () =>
-  {
+  const handleClose = () => {
     setOpen(false);
   }
-  return(
-  <div>
-    <form onSubmit={handleSubmit}>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Delete Course</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Do you want to Delete <b>{data.course_id }</b> <b>{data.course_name}</b> ??
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Delete Course</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to Delete <b>{data.course_id}</b> <b>{data.course_name}</b> ??
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" onClick={handleSubmit} color="primary" autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </form>
     </div>
   )

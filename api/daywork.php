@@ -7,8 +7,7 @@ require_once('./header.php');
 $jwt = 'test';
 
 // try{
-//     if(JWTauth::verify($jwt)) return;
-   
+//     if(JWTauth::verify($jwt)) return; 
 // }
 // catch(Exception $e)
 // {
