@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import {useHistory} from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { alpha, makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -30,6 +30,7 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
 import axios from "axios";
+import Searchbox from './components/Searchbox'
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -49,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(1),
       width: "auto",
     },
+  },
+  create : {
+    marginBottom:20,
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -102,16 +106,23 @@ export const AssignCourse = () => {
   const classes = useStyles();
   let location = useHistory();
   const state = useSelector((state) => state.auth);
+  const options = [
+    {label:'ALL',value:'all'},  
+    {label:'Teacher Name',value:'teacher_name'},
+    {label:'Course ID',value:'course_id'},
+    {label:'Course Name',value:'course_name'},
+    {label: 'Major' , value:'major'}
+  ]
+
   const assignFetch = async() =>
   {
     let assign = null;
-    if(state.role==4) assign = await axios.get(`/assign_courses.php?user=${state.id}`)
+    if(state.role==4) assign = await axios.get(`/assign_courses.php?user=${state.id}`);
     else assign = await axios.get('/assign_courses.php');
-
-    
     setassignCourse(assign.data);
+    setFilterCourse(assign.data)
   }
-  const [open, setOpen] = useState(false);
+
   const [currentModal,setCurrentModal] = useState({});
   const [createOpen,setCreateOpen] = useState(false);
   const [course,setCourse] = useState(null);
@@ -121,7 +132,9 @@ export const AssignCourse = () => {
   const [editOpen,setEditOpen] = useState(false)
   const [deleteOpen,setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
-  const [SearchBy, setSearchBy] = useState("All");
+  const [searchValue, setSearch] = useState({searchBy:'All',searchValue:'',year:'2564'});
+  const [filterCourse, setFilterCourse] = useState([])
+
   useEffect(async () => {
     try{    
     const course = await axios.get('/allcourses.php');
@@ -134,7 +147,6 @@ export const AssignCourse = () => {
     }
     catch(err)
     {
-         
       location.push('/auth');
       console.log(err.number);
     }
@@ -146,11 +158,58 @@ export const AssignCourse = () => {
     }
 
   }, []);
+
+  useEffect(()=>
+  {
+    
+    let searchBy = searchValue.searchBy.toLowerCase()
+    let searchvalue = searchValue.searchValue.toLowerCase().trim()
+    let year = searchValue.year.toLowerCase()
+    if (searchBy === 'all') {
+      setFilterCourse(assignCourse.filter(data => {
+        return (data.course_id.toString().toLowerCase().includes(searchvalue) == true
+          || data.course_name.toLowerCase().includes(searchvalue) == true
+          || (`${data.f_name} ${data.l_name}`).toLowerCase().includes(searchvalue) == true)
+          || data.major_name.toLowerCase().includes(searchValue) === true
+      }))
+    }
+    else if (searchBy === 'course_id') {
+      setFilterCourse(assignCourse.filter(data => {
+        return data.course_id.toString().toLowerCase().includes(searchvalue) == true
+      }))
+    }
+    else if (searchBy === 'course_name') {
+      setFilterCourse(assignCourse.filter(data => {
+        return data.course_name.toLowerCase().includes(searchvalue) == true
+      }))
+    }
+    else if (searchBy === 'teacher_name') {
+      setFilterCourse(assignCourse.filter(data => {
+        return (`${data.f_name} ${data.l_name}`).toLowerCase().includes(searchvalue) == true
+      }))
+    }
+    else if (searchBy === 'major') {
+      setFilterCourse(assignCourse.filter(data => {
+        console.log(searchvalue)
+        console.log(data.major_name)
+        return  data.major_name.toLowerCase().includes(searchvalue) === true
+      }))
+    }
+
+    if(year === 'all')
+    {
+      return;
+    }
+  },[searchValue])
   return (
     <>
       <div>
         <CssBaseline />
-        <div className={classes.searchField}>
+        <div>
+        <Searchbox searchValue={searchValue} setSearch={setSearch} options={options} />
+        <Button variant="contained" color="primary" className={classes.create} onClick={()=>setCreateOpen(true)}>Create</Button>
+        </div>
+        {/* <div className={classes.searchField}>
           <div class="select">
             <FormControl required className={classes.formControl}>
               <InputLabel id="demo-simple-select-required-label">
@@ -205,9 +264,9 @@ export const AssignCourse = () => {
               <MenuItem value={"Year"}>Teacher Name</MenuItem>
             </Select>
           </FormControl>
-          <Button variant="contained" color="primary" onClick={()=>setCreateOpen(true)}>Create</Button>
+         
           
-        </div>
+        </div> */}
 
         <Divider />
         <TableContainer component={Paper}>
@@ -224,7 +283,7 @@ export const AssignCourse = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assignCourse.map(data => (<TableRow key={data.m_course_id.toString()}>
+              {filterCourse.map(data => (<TableRow key={data.m_course_id.toString()}>
                <TableCell>{data.m_status ==1? 'Open' : 'Close'}</TableCell>
                <TableCell>{data.sem_number}</TableCell>
                <TableCell>{data.year}</TableCell>
@@ -264,9 +323,7 @@ export const AssignCourse = () => {
 
 const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 {
-  console.log(semester)
-  console.log(teachers)
-  console.log(course)
+  
   const [form,setForm] = useState({});
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
@@ -290,7 +347,7 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
     }
     catch(err)
     {
-      alert('something went wrong')
+      alert(err.response.data.error)
       console.log(err)
     }
   }
@@ -459,11 +516,9 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 {
   const [form,setForm] = useState({...data,course_id:data.courseID,day:data.id,work_time:data.t_time,hour:data.hr_per_week})
-  console.log(form);
   const majorList = useSelector((state) => state.master.major);
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
-
 
   const handleChange =(e) =>
   {

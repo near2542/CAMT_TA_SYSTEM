@@ -10,6 +10,29 @@ header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header("Access-Control-Allow-Methods: GET, POST,PUT,PATCH,DELETE,OPTIONS");
 // $jwt = 'test';
 
+function checkDuplicateSection($db,$decode)
+{
+    try
+    {   $sqlTest = "SELECT m_course_id FROM matching_course 
+           INNER JOIN course c ON    c.course_id = courseID 
+           WHERE c.course_id = :course_id AND section = :section AND c.deleted = 0 ";
+           $statementTest = $db->prepare($sqlTest);
+           if(!$statementTest) echo 'test';
+           if($statementTest->getErrorInfo()) die(json_encode($statementTest->getErrorInfo()));
+           $statementTest->execute([
+               ':course_id' => $decode['course_id'],
+               'section' => $decode['section']
+           ]);
+           $isExistedSection = count($statementTest->fetchAll());
+           if($isExistedSection > 0) {http_response_code(403);die(json_encode(['error' =>'Duplicated Section']));}
+           return;
+       }
+           catch(Exception $e)
+           {
+               die(json_encode($e->getMessage()));
+           }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $sql = "SELECT * FROM matching_course m
@@ -32,29 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);
-//   try
-//  {   $sqlTest = "SELECT id FROM matching_course
-//         WHERE course_id = :course_id AND section = :section_id";
-//         $statementTest = $db->prepare($sqlTest);
-//         $statementTest->execute([
-//             ':course_id' => $decode['course_id'],
-//             'section' => $decode['section']
-//         ]);
-//         die(json_encode($statementTest));
-//         // $isExistedSection = count($statementTest->fetchAll());
-//         // if(true) die(json_encode(['error' =>'test']));
-//     }
-//         catch(Exception $e)
-//         {
-//             die(json_encode($e->getMessage()));
-//         }
+    
+    checkDuplicateSection($db,$decode);
 
     try {
-        // // if ($isExistedSection > 0) {
-        // //    die(json_encode('already exist'));
-        // // }
-        // die(json_encode($isExistedSection));
-
+    
         $sql = "INSERT INTO matching_course values (NULL,:sem_id,:course_id,:section,:day,:work_time,:user_id,:language,:hour,'1','0');";
         $statement = $db->prepare($sql);
         $result = $statement->execute([
@@ -77,9 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);
+    checkDuplicateSection($db,$decode);
     $sql = "UPDATE matching_course SET  sem_id = :sem_id, courseID = :course_id, section = :section, t_date = :day,
     t_time = :work_time, user_id = :user_id, language = :language, hr_per_week =  :hour, m_status = '1',deleted = '0' where m_course_id = :m_course_id ";
-    $statement = $db->prepare($sql);
+    try{
+        $statement = $db->prepare($sql);
+        if(!$statement) echo('test');
     $result = $statement->execute([
         ':sem_id' => $decode['sem_id'],
         ':course_id' => $decode['course_id'],
@@ -92,6 +100,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ':m_course_id' => $decode['m_course_id']
     ]);
     echo json_encode($result);
+}
+catch(PDOException $e)
+{
+    echo 'test';
+    // die(json_encode($e->getMessage()));
+}
+    
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);

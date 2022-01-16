@@ -6,7 +6,7 @@ require_once './header.php';
 if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
     try{
-        $sql = "SELECT * from user_tbl  u
+        $sql = "SELECT user_id,username,f_name,l_name,major_name,cmu_mail,tel from user_tbl  u
         INNER JOIN major m ON u.major_id = m.major_id  
         WHERE  user_type = 4 and u.deleted = 0;";
         $row = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

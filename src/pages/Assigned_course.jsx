@@ -97,6 +97,7 @@ export const AssignCouse = () => {
     const {data} = await axios.get('/assign_courses.php');
   }
   const state = useSelector((state) => state.auth);
+  const options = ['ALL','Course_id','course_name','teacherß']
   const [open, setOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false)
   const [currentModal,setCurrentModal] = useState({});
@@ -339,7 +340,7 @@ const EditDialog = ({ data, setOpen, open, refetch }) => {
 
     }
     catch (err) {
-      alert('something went wrong')
+      alert(err)
       setOpen(false);
       console.log(err)
     }

@@ -1,116 +1,58 @@
-// import React from 'react'
-// import { alpha, makeStyles } from "@material-ui/core/styles";
-
-// const useStyles = makeStyles((theme) => ({
-//     container: {
-//       display: "flex",
-//       flexWrap: "wrap",
-//     },
-//     search: {
-//       position: "relative",
-//       borderRadius: theme.shape.borderRadius,
-//       backgroundColor: alpha(theme.palette.common.black, 0.05),
-//       "&:hover": {
-//         backgroundColor: alpha(theme.palette.common.black, 0.15),
-//       },
-//       marginLeft: 0,
-//       width: "100%",
-//       [theme.breakpoints.up("sm")]: {
-//         marginLeft: theme.spacing(1),
-//         width: "auto",
-//       },
-//     },
-//     searchIcon: {
-//       padding: theme.spacing(0, 2),
-//       height: "100%",
-//       position: "absolute",
-//       pointerEvents: "none",
-//       display: "flex",
-//       alignItems: "center",
-//       justifyContent: "center",
-//     },
-//     selectEmpty: {
-//       marginTop: theme.spacing(2),
-//     },
-//     formControl: {
-//       margin: theme.spacing(1),
-//       minWidth: 120,
-//     },
+import React, { useState, useEffect } from "react";
+import { useStyles } from './SearchboxStyle/style'
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
+import axios from "axios";
   
-//     searchField: {
-//       margin: theme.spacing(1, 1, 1, 1),
-//       display: "flex",
-//       alignItems: "center",
-//     },
-//     selectField: {
-//       display: 'flex',
-  
-//     },
-//     createButton: {
-//       color: '#002884',
-//       textAlign: 'right',
-//     },
-//     inputInput: {
-//       padding: theme.spacing(1, 1, 1, 0),
-//       // vertical padding + font size from searchIcon
-//       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-//       transition: theme.transitions.create("width"),
-//       width: "100%",
-//       [theme.breakpoints.up("sm")]: {
-//         width: "12ch",
-//         "&:focus": {
-//           width: "20ch",
-//         },
-//       },
-//     },
-//   }));
+export default function Searchbox({searchValue,setSearch,options}) {
 
-  
-// export default function Searchbox() {
+    
+    const classes = useStyles()
 
-//     const classes = useStyles()
+    return (
+        <div className={classes.searchField}>
+        <div className="select">
+          <FormControl required className={classes.formControl}>
+            <InputLabel id="demo-simple-select-required-label">
+              Search By
+            </InputLabel>
 
-//     return (
-//         <div className={classes.searchField}>
-//         <div className="select">
-//           <FormControl required className={classes.formControl}>
-//             <InputLabel id="demo-simple-select-required-label">
-//               Search By
-//             </InputLabel>
-
-//             <Select
-//               labelId="demo-simple-select-required-label"
-//               id="demo-simple-select-required"
-//               value={SearchBy}
-//               onChange={(e) => setSearchBy(e.target.value)}
-//               className={classes.selectEmpty}
-//             >
-//               <MenuItem default value={"All"}>
-//                 All
-//               </MenuItem>
-//               <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-//               <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-
-//             </Select>
-//           </FormControl>
-//         </div>
-//         <div className={classes.search}>
-//           <div className={classes.searchIcon}>
-//             <SearchIcon />
-//           </div>
-//           <InputBase
-//             placeholder="Search…"
-//             variant="outlined"
-//             classes={{
-//               root: classes.inputRoot,
-//               input: classes.inputInput,
-//             }}
-//             onChange={(e) => setSearch(e.target.value)}
-//             inputProps={{ "aria-label": "search" }}
-//           />
-//         </div>
-
-//         <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
-//       </div>
-//         )
-// }
+            <Select
+              labelId="demo-simple-select-required-label"
+              id="demo-simple-select-required"
+              value={searchValue.searchBy}
+              onChange={(e) => setSearch({...searchValue,searchBy:e.target.value})}
+              className={classes.selectEmpty}
+            >
+               {options.map(data => <MenuItem value={data.value}>{data.label}</MenuItem>)}
+              <MenuItem default value={"All"}>
+                All
+              </MenuItem>
+              <MenuItem value={"Course_Name"}>Course Name</MenuItem>
+              <MenuItem value={"Course_ID"}>Course ID</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+            onChange={(e) => setSearch({...searchValue,searchValue:e.target.value})}
+              placeholder="Search…"
+              variant="outlined"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </div>
+          
+      </div>
+        )
+}
