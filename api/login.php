@@ -29,7 +29,7 @@ $decode = json_decode($input,true);
 try{
     header("HTTP/1.1 200 OK");
     $sql = "SELECT user_id,username,password,user_type,student_id from  user_tbl 
-            WHERE username = :username ";
+            WHERE username = :username AND deleted = 0 ";
     $statement = $db->prepare($sql);
     $result = $statement->execute(
         [

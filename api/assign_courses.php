@@ -16,7 +16,8 @@ function checkDuplicateSection($db,$decode)
     try
     {   $sqlTest = "SELECT m_course_id FROM matching_course m
            INNER JOIN course c ON    c.id = m.courseID 
-           WHERE m.courseID = :course_id AND section = :section AND c.deleted = 0 AND m.deleted = 0 
+           INNER JOIN user_tbl u ON m.user_id = u.user_id
+           WHERE m.courseID = :course_id AND section = :section AND c.deleted = 0 AND m.deleted = 0  AND u.deleted = 0;
                  AND sem_id = :sem_id ";
            $statementTest = $db->prepare($sqlTest);
 
@@ -24,7 +25,6 @@ function checkDuplicateSection($db,$decode)
                ':course_id' => $decode['course_id'],
                ':section' => $decode['section'],
                ':sem_id' => $decode['sem_id'],
-               
            ]);
 
            $isExistedSection = count($statementTest->fetchAll());
@@ -111,17 +111,20 @@ catch(PDOException $e)
 }
     
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $input = file_get_contents('php://input');
-    $decode = json_decode($input, true);
-    $sql = "UPDATE course SET 
-                deleted=:deleted
-                WHERE id=:id;";
+    if(!isset($_GET['id'])) die(json_encode(['error'=>'Course not existed']));
+    $id = $_GET['id'];
+    $sql = "UPDATE matching_course SET 
+                deleted=1
+                WHERE m_course_id=:id;";
+    try{
     $statement = $db->prepare($sql);
     $result = $statement->execute([
-        ':deleted' => $decode['deleted'],
-
-        ':id' => $decode['id'],
+        ':id' => $id,
     ]);
 
-    echo json_encode($result);
+     die(json_encode($result));
 }
+     catch(Exception $e){
+         die(json_encode($e->getMessage()));
+     }
+    }

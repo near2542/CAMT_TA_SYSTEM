@@ -290,8 +290,9 @@ const CreateDialog = ({data,setOpen,open,refetch}) =>
     }
     catch(err)
     {
-      alert('something went wrong')
-      console.log(err)
+      console.log(err.response)
+      let message = err.response.data.search('23000') > -1? 'Username already existed' : err.response.data.error[0];
+      alert(message)
     }
   }
 

@@ -43,8 +43,9 @@ if( is_null($decode['cmu_mail'])
 
 try{
 $sql = "INSERT INTO user_tbl (user_id,username,password,f_name,l_name,major_id,cmu_mail,line_id,facebook_link,tel,user_type) VALUES 
-('',:username,:pass,:firstname,:lastname,:major,:cmu_mail,:line_id,:facebook_link,:tel,4)";
+(NULL,:username,:pass,:firstname,:lastname,:major,:cmu_mail,:line_id,:facebook_link,:tel,4)";
 $statement = $db->prepare($sql);
+// echo $statement;
 $result = $statement->execute(
     [
         ':username' => $decode['username'],
@@ -65,7 +66,9 @@ $result = $statement->execute(
 catch(Exception $e)
 {
     http_response_code(400);
-    echo json_encode([$e->getMessage()]);
+    $message = $e->getMessage();
+    if(strpos('23000',$message)) die(json_encode(['error'=>'Username Already Existed']));
+    echo json_encode($message);
 }
 
 }

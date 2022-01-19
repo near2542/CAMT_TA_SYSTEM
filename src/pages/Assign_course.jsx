@@ -257,6 +257,7 @@ export const AssignCourse = () => {
                     setCurrentModal(data);
                     setDeleteOpen(true);} 
                   }
+                  disabled={!data.m_status}
                     >Delete</Button></TableCell>
               </TableRow>))
               }
@@ -400,7 +401,6 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
                 {daywork.map(day=> 
                 (<MenuItem value={day.id}>{day.day}</MenuItem>))
                 }
-               
               </Select>
             </FormControl>
             <TextField
@@ -466,10 +466,10 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 {
   const [form,setForm] = useState({...data,course_id:data.courseID,day:data.id,work_time:data.t_time,hour:data.hr_per_week})
-  const majorList = useSelector((state) => state.master.major);
+  // const majorList = useSelector((state) => state.master.major);
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
-
+  console.log(form);
   const handleChange =(e) =>
   {
     setForm({...form,
@@ -559,10 +559,9 @@ const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
                 name="user_id"
                 onChange={handleChange}
                 value={form.user_id}
-             
               >
                 {teachers.map(teacher=> 
-                (<MenuItem value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
+                (<MenuItem default={form.user_id === teacher.user_id} value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
                 }
                
               </Select>

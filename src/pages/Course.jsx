@@ -29,6 +29,7 @@ import TextField from "@material-ui/core/TextField";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
 import Searchbox from './components/Searchbox';
+import { useOptions } from "../shared/useOptions";
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -105,45 +106,51 @@ let GlobalForm = {
 export const Course = () => {
   const [course, setCourse] = useState([]);
   const [filterCourse, setFilterCourse] = useState([])
+  const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
+  const options = useOptions(['course_id','course_name','major_name'])
   const dispatch = useDispatch();
   const fetchCourses = async () => {
     const { data } = await axios.get('/allcourses.php');
     setCourse(data);
     setFilterCourse(data)
   }
-  const [search, setSearch] = useState('')
   const titleName = {
     title: "Course",
   };
 
+  
+
   const searchData = () => {
-    let searchby = SearchBy.toLowerCase()
-    let searchValue = search.toLowerCase()
+    let searchby = searchValue.searchBy.toLowerCase()
+    let searchvalue = searchValue.searchValue.toLowerCase()
+    let year = searchValue.year
+    let _data = []
     if (searchby === 'all') {
-      setFilterCourse(course.filter(data => {
-        console.log(data)
-        return data.course_id.toString().toLowerCase().includes(searchValue) == true
-          || data.course_name.toLowerCase().includes(searchValue) == true
-          || data.major_name.toLowerCase().includes(searchValue) === true
-        
-      }))
+      _data = course.filter(data => {
+        return data.course_id.toString().toLowerCase().includes(searchvalue) == true
+          || data.course_name.toLowerCase().includes(searchvalue) == true
+          || data.major_name.toLowerCase().includes(searchvalue) === true
+      })
     }
     else if (searchby === 'course_id') {
-      setFilterCourse(course.filter(data => {
-        return data.course_id.toString().toLowerCase().includes(searchValue) == true
-      }))
+    _data = course.filter(data => {
+        return data.course_id.toString().toLowerCase().includes(searchvalue) == true
+      })
     }
     else if (searchby === 'course_name') {
-      setFilterCourse(course.filter(data => {
-        return data.course_name.toLowerCase().includes(searchValue) == true
-      }))
+    _data =  course.filter(data => {
+        return data.course_name.toLowerCase().includes(searchvalue) == true
+      })
     }
     else if (searchby === 'major_name') {
-      setFilterCourse(course.filter(data => {
-        return data.major_name.toLowerCase().includes(searchValue) === true
-      }))
+     _data = course.filter(data => {
+        return data.major_name.toLowerCase().includes(searchvalue) === true
+      })
     }
 
+
+    setFilterCourse(_data)
+    
   }
 
   dispatch(title(titleName));
@@ -173,13 +180,13 @@ export const Course = () => {
   }, []);
   useEffect(() => {
     searchData()
-
-  }, [search, SearchBy])
+  }, [searchValue])
   return (
     <>
       <div>
-        {/* <Searchbox/> */}
-        {!state.auth && <Redirect to="/auth" />}
+        <Searchbox searchValue={searchValue} setSearch={setSearch} options={options} />
+
+        {/* {!state.auth && <Redirect to="/auth" />}
         <CssBaseline />
         <div className={classes.searchField}>
           <div className="select">
@@ -217,11 +224,10 @@ export const Course = () => {
               }}
               onChange={(e) => setSearch(e.target.value)}
               inputProps={{ "aria-label": "search" }}
-            />
-          </div>
+            /> */}
+        
 
           <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
-        </div>
 
         {/* <Divider /> */}
         <TableContainer component={Paper}>
