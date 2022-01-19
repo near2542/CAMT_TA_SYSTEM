@@ -81,7 +81,7 @@ export  function Login() {
     if(data.false) throw new Error(data.error);
     setLoginError(null);
     dispatch(checkAuth(data));
-   
+   console.log(data);
     history.push('/home')
     }
     catch(err)

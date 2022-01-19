@@ -1,8 +1,8 @@
 <?php
-$server = $SERVER['DB_SERVER']? $_SERVER['DB_SERVER'] : "localhost";
-$username = $_SERVER['DB_USERNAME'] ?$_SERVER['DB_USERNAME'] : "root";
-$password = $_SERVER['DB_PASSWORD']? $_SERVER['DB_PASSWORD'] : "";
-$dbname = $_SERVER['DB_NAME']? $_SERVER['DB_NAME'] :  "tasys";
+$server = $_ENV['DB_SERVER']? $_ENV['DB_SERVER'] : "localhost";
+$username = $_ENV['DB_USERNAME'] ? $_ENV['DB_USERNAME'] : "root";
+$password =$_ENV['DB_PASSWORD']? $_ENV['DB_PASSWORD'] : "";
+$dbname = $_ENV['DB_NAME']? $_ENV['DB_NAME'] :  "tasys";
 
 try{
 $db = new PDO("mysql:host=$server;dbname=$dbname",$username,$password);

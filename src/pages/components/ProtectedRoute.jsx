@@ -1,14 +1,12 @@
 import React from 'react'
-import {Redirect} from 'react-dom';
+import { Redirect,useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function ProtectedRoute({children}) {
     const state = useSelector((state) => state.auth);
-    console.log(state)    
-    return (
+    return state.auth?(
         <>
-            {!state.auth && <Redirect to='/auth'/>}
             {children}
         </>
-    )
+    ) :    <Redirect to="/auth"/>
 }

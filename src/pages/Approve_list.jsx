@@ -91,7 +91,7 @@ export const Approved_list = () => {
   const state = useSelector((state) => state.auth);
   const assignFetch = async () => {
     let assign = null;
-  if (state.role == 4) assign = `/approved_list.php?user=${state.id}`
+  if (state.role === 4) assign = `/approved_list.php?user=${state.id}`
   else assign = '/approved_list.php'
     console.log(assign);
     const { data } = await axios.get(assign)

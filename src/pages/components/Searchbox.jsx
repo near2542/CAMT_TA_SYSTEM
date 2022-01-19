@@ -27,13 +27,11 @@ export default function Searchbox({searchValue,setSearch,options}) {
               value={searchValue.searchBy}
               onChange={(e) => setSearch({...searchValue,searchBy:e.target.value})}
               className={classes.selectEmpty}
+              
             >
-               {options.map(data => <MenuItem value={data.value}>{data.label}</MenuItem>)}
-              <MenuItem default value={"All"}>
-                All
-              </MenuItem>
-              <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-              <MenuItem value={"Course_ID"}>Course ID</MenuItem>
+               {options.map(data => <MenuItem default={data.default} value={data.value}>{data.label}</MenuItem>)}
+          
+           
             </Select>
           </FormControl>
         </div>

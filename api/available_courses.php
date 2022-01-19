@@ -1,5 +1,5 @@
 <?php
-require_once('./Class/JWTauth.php');
+require_once('./header.php');
 require_once('./db_config.php');
 use Auth\JWTauth;
 header("Content-Type: application/json;charset=utf-8");
@@ -24,7 +24,7 @@ $jwt = 'test';
 if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
     try{
-        $sql = "SELECT * FROM course c LEFT JOIN major m ON c.major_id = m.major_id where c.deleted = 0 order by r_status desc";
+        $sql = "SELECT * FROM course c LEFT JOIN major m ON c.major_id = m.major_id where c.deleted = 0 order by course_id";
         $row = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($row);
     }

@@ -20,6 +20,7 @@ export const authSlice = createSlice({
             state.username = action.payload.username
             state.role = action.payload.role
             state.auth = action.payload.auth
+            console.log(state);
         },
         removeAuth:(state)=>
         {

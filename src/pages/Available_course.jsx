@@ -28,6 +28,7 @@ import TextField from "@material-ui/core/TextField";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../store/title";
 import Data from "./components/tableHeader.json";
+import axios from '../shared/axios';
 // import
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -94,13 +95,23 @@ export const AvaliableCourse = () => {
   const state = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const [tableHeader, SetTableHeader] = useState([]);
+  const [course,setCourses] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
-  useEffect(() => {
+  useEffect(async() => {
     if (state.role == 4) {
       SetTableHeader(Data.available_course.teacher);
     }
     else if (state.role == 1) {
       SetTableHeader(Data.available_course.admin);
+    }
+    try{
+    const {data} = await axios.get('/available_courses.php');
+    setCourses(data);
+    }
+    catch(err)
+    {
+      alert('error');
+      console.log(err.response.data);
     }
   }, []);
   return (
@@ -179,16 +190,15 @@ export const AvaliableCourse = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                {/* <TableCell component="th" scope="row">
-                  {"test"}
+            {course.map(data =>  <TableRow>
+                <TableCell component="th" scope="row">
+                  {data.course_id}
                 </TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell>
-                <TableCell align="right">{"test"}</TableCell> */}
-              </TableRow>
-            </TableBody>
+                <TableCell >{data.course_name}</TableCell>
+                <TableCell >{data.major_name}</TableCell>
+              
+            </TableRow>)}
+       </TableBody>
           </Table>
         </TableContainer>
       </div>

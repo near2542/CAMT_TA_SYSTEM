@@ -107,7 +107,7 @@ export const AssignCourse = () => {
   let location = useHistory();
   const state = useSelector((state) => state.auth);
   const options = [
-    {label:'ALL',value:'all'},  
+    {label:'ALL',value:'all',default:true},  
     {label:'Teacher Name',value:'teacher_name'},
     {label:'Course ID',value:'course_id'},
     {label:'Course Name',value:'course_name'},
@@ -117,10 +117,17 @@ export const AssignCourse = () => {
   const assignFetch = async() =>
   {
     let assign = null;
+    try{
     if(state.role==4) assign = await axios.get(`/assign_courses.php?user=${state.id}`);
     else assign = await axios.get('/assign_courses.php');
     setassignCourse(assign.data);
     setFilterCourse(assign.data)
+    }
+  catch(err)
+  {
+    console.log(err);
+  }
+   
   }
 
   const [currentModal,setCurrentModal] = useState({});
@@ -132,7 +139,7 @@ export const AssignCourse = () => {
   const [editOpen,setEditOpen] = useState(false)
   const [deleteOpen,setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
-  const [searchValue, setSearch] = useState({searchBy:'All',searchValue:'',year:'2564'});
+  const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
   const [filterCourse, setFilterCourse] = useState([])
 
   useEffect(async () => {
@@ -209,64 +216,7 @@ export const AssignCourse = () => {
         <Searchbox searchValue={searchValue} setSearch={setSearch} options={options} />
         <Button variant="contained" color="primary" className={classes.create} onClick={()=>setCreateOpen(true)}>Create</Button>
         </div>
-        {/* <div className={classes.searchField}>
-          <div class="select">
-            <FormControl required className={classes.formControl}>
-              <InputLabel id="demo-simple-select-required-label">
-                Search By
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-required-label"
-                id="demo-simple-select-required"
-                value={SearchBy}
-                onChange={(e) => setSearchBy(e.target.value)}
-                className={classes.selectEmpty}
-              >
-                <MenuItem default value={"All"}>
-                  All
-                </MenuItem>
-                <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-                <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-                <MenuItem value={"Teacher_Name"}>Teacher Name</MenuItem>
-                <MenuItem value={"Year"}>Teacher Name</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              variant="outlined"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
-          <FormControl required className={classes.formControl}>
-            <InputLabel id="demo-simple-select-required-label">Year</InputLabel>
-            <Select
-              labelId="demo-simple-select-required-label"
-              id="demo-simple-select-required"
-              value={SearchBy}
-              onChange={(e) => setSearchBy(e.target.value)}
-              className={classes.selectEmpty}
-            >
-              <MenuItem default value={"All"}>
-                All
-              </MenuItem>
-              <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-              <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-              <MenuItem value={"Teacher_Name"}>Teacher Name</MenuItem>
-              <MenuItem value={"Year"}>Teacher Name</MenuItem>
-            </Select>
-          </FormControl>
-         
-          
-        </div> */}
+        
 
         <Divider />
         <TableContainer component={Paper}>
@@ -283,7 +233,7 @@ export const AssignCourse = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filterCourse.map(data => (<TableRow key={data.m_course_id.toString()}>
+              {filterCourse?.map(data => (<TableRow key={data.m_course_id.toString()}>
                <TableCell>{data.m_status ==1? 'Open' : 'Close'}</TableCell>
                <TableCell>{data.sem_number}</TableCell>
                <TableCell>{data.year}</TableCell>
@@ -528,7 +478,7 @@ const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
   }
   const handleSubmit = async(e)=>
   {
-    console.log('submit');
+  
     try{
     e.preventDefault();
     //request
@@ -542,9 +492,8 @@ const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
     }
     catch(err)
     {
-      alert('something went wrong')
+      alert(err.response.data.error)
       setOpen(false);
-      console.log(err)
     }
   }
 

@@ -118,21 +118,29 @@ export const Course = () => {
 
   const searchData = () => {
     let searchby = SearchBy.toLowerCase()
+    let searchValue = search.toLowerCase()
     if (searchby === 'all') {
       setFilterCourse(course.filter(data => {
         console.log(data)
-        return data.course_id.toString().toLowerCase().includes(search.toLowerCase()) == true
-          || data.course_name.toLowerCase().includes(search.toLowerCase()) == true
+        return data.course_id.toString().toLowerCase().includes(searchValue) == true
+          || data.course_name.toLowerCase().includes(searchValue) == true
+          || data.major_name.toLowerCase().includes(searchValue) === true
+        
       }))
     }
     else if (searchby === 'course_id') {
       setFilterCourse(course.filter(data => {
-        return data.course_id.toString().toLowerCase().includes(search.toLowerCase()) == true
+        return data.course_id.toString().toLowerCase().includes(searchValue) == true
       }))
     }
     else if (searchby === 'course_name') {
       setFilterCourse(course.filter(data => {
-        return data.course_name.toLowerCase().includes(search.toLowerCase()) == true
+        return data.course_name.toLowerCase().includes(searchValue) == true
+      }))
+    }
+    else if (searchby === 'major_name') {
+      setFilterCourse(course.filter(data => {
+        return data.major_name.toLowerCase().includes(searchValue) === true
       }))
     }
 
@@ -231,7 +239,7 @@ export const Course = () => {
             </TableHead>
             <TableBody>
 
-              {filterCourse.map(data =>
+              {filterCourse?.map(data =>
               (<>
                 <TableRow key={`id_${data.id}`}>
 
@@ -299,7 +307,7 @@ const CreateDialog = ({ data, setOpen, open, refetch }) => {
       alert('success');
     }
     catch (err) {
-      alert('something went wrong')
+      alert(err.response.data.error)
       console.log(err)
     }
   }
@@ -407,9 +415,8 @@ const EditDialog = ({ data, setOpen, open, refetch }) => {
 
     }
     catch (err) {
-      alert('something went wrong')
+      alert(err.response.data.error)
       setOpen(false);
-      console.log(err)
     }
   }
 

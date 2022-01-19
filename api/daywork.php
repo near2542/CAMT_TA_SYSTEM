@@ -1,8 +1,9 @@
 <?php
 require_once('./Class/JWTauth.php');
+
+require_once('./header.php');
 require_once('./db_config.php');
 use Auth\JWTauth;
-require_once('./header.php');
 
 $jwt = 'test';
 

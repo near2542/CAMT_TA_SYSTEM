@@ -1,7 +1,6 @@
 <?php
-require('./vendor/autoload.php');
-require_once './db_config.php';
 require_once './header.php';
+require_once './db_config.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'GET')
 {

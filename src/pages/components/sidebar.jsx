@@ -2,21 +2,17 @@
 import React, { useState, useEffect } from "react";
 import axios from '../../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import { useHistory, useLocation, Link } from "react-router-dom";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
+import { Link } from "react-router-dom";
 import List from "@material-ui/core/List";
-import {Redirect} from 'react-router-dom'
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -137,7 +133,7 @@ function ResponsiveDrawer(props) {
           <List>
             {AdminMenuList.map((text, index) => (
               
-              <Link className={classes.Link} to={text.route} key={`key${text.name}`}>
+              <Link className={classes.Link} to={text.route} key={`${index} ${text}`}> 
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -153,7 +149,7 @@ function ResponsiveDrawer(props) {
           {" "}
           <List>
             {TeacherMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}  key={`key${text.name}`}>
+              <Link className={classes.Link} to={text.route} key={`${index} ${text}`}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -168,7 +164,7 @@ function ResponsiveDrawer(props) {
         <>
           <List>
             {TAMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}  key={`key${text.name}`}>
+              <Link key={`${index} ${text}`} className={classes.Link} to={text.route} >
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -184,7 +180,7 @@ function ResponsiveDrawer(props) {
         <>
           <List>
             {TAMenuList.map((text, index) => (
-              <Link className={classes.Link} to={text.route}>
+              <Link key={`${index} ${text}`} className={classes.Link} to={text.route}>
                 <ListItem button key={text.name}>
                   <ListItemIcon>{text.icon}</ListItemIcon>
                   <ListItemText primary={text.name} />
@@ -217,9 +213,8 @@ function ResponsiveDrawer(props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  return (
+  return state.auth?(
 
-  state.auth && 
     <div className={classes.root}>
 
       <CssBaseline />
@@ -276,15 +271,9 @@ function ResponsiveDrawer(props) {
         {children}
       </main>
     </div>
-  );
+  ): null;
 }
 
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
+
 
 export default ResponsiveDrawer;

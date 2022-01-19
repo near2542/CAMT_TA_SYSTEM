@@ -1,29 +1,34 @@
 <?php
+require_once('./header.php');
 require_once('./Class/JWTauth.php');
 require_once('./db_config.php');
 
 
-header("Content-Type: application/json");
-header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Credentials:true');
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,ACCESS_TOKEN');
-header("Access-Control-Allow-Methods: GET, POST,PUT,PATCH,DELETE,OPTIONS");
+// header("Content-Type: application/json");
+// header('Access-Control-Allow-Origin: http://localhost:3000');
+// header('Access-Control-Allow-Credentials:true');
+// header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,ACCESS_TOKEN');
+// header("Access-Control-Allow-Methods: GET, POST,PUT,PATCH,DELETE,OPTIONS");
 // $jwt = 'test';
 
 function checkDuplicateSection($db,$decode)
 {
     try
-    {   $sqlTest = "SELECT m_course_id FROM matching_course 
-           INNER JOIN course c ON    c.course_id = courseID 
-           WHERE c.course_id = :course_id AND section = :section AND c.deleted = 0 ";
+    {   $sqlTest = "SELECT m_course_id FROM matching_course m
+           INNER JOIN course c ON    c.id = m.courseID 
+           WHERE m.courseID = :course_id AND section = :section AND c.deleted = 0 AND m.deleted = 0 
+                 AND sem_id = :sem_id ";
            $statementTest = $db->prepare($sqlTest);
-           if(!$statementTest) echo 'test';
-           if($statementTest->getErrorInfo()) die(json_encode($statementTest->getErrorInfo()));
+
            $statementTest->execute([
                ':course_id' => $decode['course_id'],
-               'section' => $decode['section']
+               ':section' => $decode['section'],
+               ':sem_id' => $decode['sem_id'],
+               
            ]);
+
            $isExistedSection = count($statementTest->fetchAll());
+          
            if($isExistedSection > 0) {http_response_code(403);die(json_encode(['error' =>'Duplicated Section']));}
            return;
        }
@@ -77,8 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         http_response_code(400);
         die(['error'=>$e->getMessage()]);
     }
-
-    die(-1);
 } else if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);
@@ -99,11 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ':hour' => $decode['hour'],
         ':m_course_id' => $decode['m_course_id']
     ]);
-    echo json_encode($result);
+   die(json_encode($result));
 }
 catch(PDOException $e)
 {
-    echo 'test';
+    die('test');
     // die(json_encode($e->getMessage()));
 }
     
