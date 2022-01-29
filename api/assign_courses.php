@@ -28,7 +28,6 @@ function checkDuplicateSection($db,$decode)
            ]);
 
            $isExistedSection = count($statementTest->fetchAll());
-          
            if($isExistedSection > 0) {http_response_code(403);die(json_encode(['error' =>'Duplicated Section']));}
            return;
        }
@@ -51,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $sql .= " ORDER BY s.sem_number desc,m.m_status ";
 
         $row = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        exit(json_encode($row));
+        
+        die(json_encode($row));
     } catch (Exception $e) {
         http_response_code(400);
         exit(json_encode($e->getMessage()));
@@ -120,7 +120,9 @@ catch(PDOException $e)
     $statement = $db->prepare($sql);
     $result = $statement->execute([
         ':id' => $id,
+
     ]);
+    
 
      die(json_encode($result));
 }

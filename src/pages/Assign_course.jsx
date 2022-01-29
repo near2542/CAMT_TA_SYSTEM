@@ -133,15 +133,16 @@ export const AssignCourse = () => {
   const [currentModal,setCurrentModal] = useState({});
   const [createOpen,setCreateOpen] = useState(false);
   const [course,setCourse] = useState(null);
+  const semester = useSelector((state) => state.master.semester);
   const [assignCourse,setassignCourse] = useState([]);
   const [teachers,setTeachers] = useState(null)
-  const [semester,setSemester] = useState(null)
+  const [semester,setSemester] = useState(semester)
   const [editOpen,setEditOpen] = useState(false)
   const [deleteOpen,setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
   const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
   const [filterCourse, setFilterCourse] = useState([])
-
+  
   useEffect(async () => {
     try{    
     const course = await axios.get('/allcourses.php');

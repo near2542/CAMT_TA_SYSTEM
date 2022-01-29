@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from '../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom"
@@ -31,69 +31,8 @@ import Data from "./components/tableHeader.json";
 import Searchbox from './components/Searchbox';
 import { useOptions } from "../shared/useOptions";
 // import
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.black, 0.05),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.black, 0.15),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
+import {useStyles} from './components/main-style';
 
-  searchField: {
-    margin: theme.spacing(1, 1, 1, 1),
-    display: "flex",
-    alignItems: "center",
-  },
-  selectField: {
-    display: 'flex',
-
-  },
-  createButton: {
-    color: '#002884',
-    textAlign: 'right',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
 
 let GlobalForm = {
   course_id: '',
@@ -105,9 +44,10 @@ let GlobalForm = {
 
 export const Course = () => {
   const [course, setCourse] = useState([]);
+  const classes = useStyles();
   const [filterCourse, setFilterCourse] = useState([])
   const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
-  const options = useOptions(['course_id','course_name','major_name'])
+  const options = useRef(useOptions(['course_id','course_name','major_name']))
   const dispatch = useDispatch();
   const fetchCourses = async () => {
     const { data } = await axios.get('/allcourses.php');
@@ -147,26 +87,21 @@ export const Course = () => {
         return data.major_name.toLowerCase().includes(searchvalue) === true
       })
     }
-
-
     setFilterCourse(_data)
-    
   }
 
   dispatch(title(titleName));
   const location = useHistory();
-  const classes = useStyles();
   const state = useSelector((state) => state.auth);
   const [currentModal, setCurrentModal] = useState();
   const [createOpen, setCreateOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
-  const [SearchBy, setSearchBy] = useState("All");
   useEffect(() => {
     if (!state.auth) location.push('/auth');
     try {
-      fetchCourses();
+      fetchCourses(); 
     }
     catch (err) {
       console.log(err);
@@ -184,51 +119,10 @@ export const Course = () => {
   return (
     <>
       <div>
-        <Searchbox searchValue={searchValue} setSearch={setSearch} options={options} />
-
-        {/* {!state.auth && <Redirect to="/auth" />}
-        <CssBaseline />
-        <div className={classes.searchField}>
-          <div className="select">
-            <FormControl required className={classes.formControl}>
-              <InputLabel id="demo-simple-select-required-label">
-                Search By
-              </InputLabel>
-
-              <Select
-                labelId="demo-simple-select-required-label"
-                id="demo-simple-select-required"
-                value={SearchBy}
-                onChange={(e) => setSearchBy(e.target.value)}
-                className={classes.selectEmpty}
-              >
-                <MenuItem default value={"All"}>
-                  All
-                </MenuItem>
-                <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-                <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-
-              </Select>
-            </FormControl>
-          </div>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              variant="outlined"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              onChange={(e) => setSearch(e.target.value)}
-              inputProps={{ "aria-label": "search" }}
-            /> */}
-        
-
+        <Searchbox searchValue={searchValue} setSearch={setSearch} options={options.current} />
+            <div className={classes.create}>
           <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
-
+            </div>
         {/* <Divider /> */}
         <TableContainer component={Paper}>
           <Table
@@ -244,7 +138,6 @@ export const Course = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-
               {filterCourse?.map(data =>
               (<>
                 <TableRow key={`id_${data.id}`}>
@@ -271,7 +164,7 @@ export const Course = () => {
               </>)
               )/* { <TableCell component="th" scope="row">
                   {"test"}
-                </TableCell>
+                </TableCell> 
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
                 <TableCell align="right">{"test"}</TableCell>
@@ -513,7 +406,7 @@ const DeleteDialog = ({ data, setOpen, open, refetch }) => {
     }
     catch (err) {
       setOpen(false);
-      alert('something went wrong')
+      return alert(err.response.data.error)
       console.log(err)
     }
   }

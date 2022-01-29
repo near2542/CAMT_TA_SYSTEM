@@ -13,7 +13,7 @@ export const useOptions = (options = []) => {
     console.log(options.map(data=> {  
         let _option = data.toLowerCase();
         if(data === 'all') return;
-        if(data === 'major') return major;
+        if(data === 'major_name') return major;
         if(data === 'teacher_name') return teacher_name;
         if(data === 'course_id') return course_id;
         if(data === 'course_name') return course_name;

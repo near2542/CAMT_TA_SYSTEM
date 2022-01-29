@@ -24,9 +24,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Input from "@material-ui/core/Input";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
@@ -34,70 +31,9 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../../store/title";
 // import {CreateDialog} from './create'
 import Data from "../components/tableHeader.json";
+import { useStyles } from "../components/main-style";
 // import
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.black, 0.05),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.black, 0.15),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
 
-  searchField: {
-    margin: theme.spacing(1, 1, 1, 1),
-    display: "flex",
-    alignItems: "center",
-  },
-  selectField:{
-    display:'flex',
-
-  },
-  createButton:{
-    color:'#002884',
-    textAlign:'right',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
 
 let GlobalForm = {
   course_id: '',
@@ -138,7 +74,6 @@ export const Teacher = () => {
     {
       console.log(err);
     }
-   
   }, []);
   return (
     <>
@@ -200,8 +135,12 @@ export const Teacher = () => {
               <MenuItem value={"Year"}>Teacher Name</MenuItem>
             </Select>
           </FormControl>
-          <Button variant="contained" color="primary" onClick={()=>setCreateOpen(true)}>Create</Button>
+       
         </div>
+
+<div className={classes.create}>
+<Button variant="contained" color="primary" onClick={()=>setCreateOpen(true)}>Create</Button>
+</div>
 
         <Divider />
         <TableContainer component={Paper}>
