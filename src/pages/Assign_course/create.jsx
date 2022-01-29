@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
-
+import { useStyles } from "../components/main-style";
+import {useHistory} from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { alpha, makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -26,194 +28,14 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import NativeSelect from "@material-ui/core/NativeSelect";
-import { title } from "../store/title";
-import Data from "./components/tableHeader.json";
-import axios from '../shared/axios';
-import { useStyles} from './components/main-style'
-// import
-// const useStyles = makeStyles((theme) => ({
-//   container: {
-//     display: "flex",
-//     flexWrap: "wrap",
-//   },
-//   search: {
-//     position: "relative",
-//     borderRadius: theme.shape.borderRadius,
-//     backgroundColor: alpha(theme.palette.common.black, 0.05),
-//     "&:hover": {
-//       backgroundColor: alpha(theme.palette.common.black, 0.15),
-//     },
-//     marginLeft: 0,
-//     width: "100%",
-//     [theme.breakpoints.up("sm")]: {
-//       marginLeft: theme.spacing(1),
-//       width: "auto",
-//     },
-//   },
-//   searchIcon: {
-//     padding: theme.spacing(0, 2),
-//     height: "100%",
-//     position: "absolute",
-//     pointerEvents: "none",
-//     display: "flex",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   selectEmpty: {
-//     marginTop: theme.spacing(2),
-//   },
-//   formControl: {
-//     margin: theme.spacing(1),
-//     minWidth: 120,
-//   },
+import { title } from "../../store/title";
+import Data from "../components/tableHeader.json";
+import axios from "axios";
+import Searchbox from '../components/Searchbox'
 
-//   searchField: {
-//     margin: theme.spacing(1, 1, 1, 1),
-//     display: "flex",
-//     alignItems: "center",
-//   },
-//   inputInput: {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-//     transition: theme.transitions.create("width"),
-//     width: "100%",
-//     [theme.breakpoints.up("sm")]: {
-//       width: "12ch",
-//       "&:focus": {
-//         width: "20ch",
-//       },
-//     },
-//   },
-// }));
-export const AvaliableCourse = () => {
-  const dispatch = useDispatch();
-  const titleName = {
-    title: "Avaliable Course",
-  };
-  dispatch(title(titleName));
-  const classes = useStyles();
-  const state = useSelector((state) => state.auth);
-  const semester = dispatch(state => state.semester)
-  const [tableHeader, SetTableHeader] = useState([]);
-  const [course,setCourses] = useState([]);
-  const [SearchBy, setSearchBy] = useState("All");
-  const [createOpen,setCreateOpen] = useState(false);
-  useEffect(async() => {
-    if (state.role == 4) {
-      SetTableHeader(Data.available_course.teacher);
-    }
-    else if (state.role == 1) {
-      SetTableHeader(Data.available_course.admin);
-    }
-    try{
-    const {data} = await axios.get('/available_courses.php');
-    setCourses(data);
-    }
-    catch(err)
-    {
-      alert('error');
-      console.log(err.response.data);
-    }
-  }, []);
-  return (
-    <>
-      <div>
-        <CssBaseline />
-        <div className={classes.searchField}>
-          <div class="select">
-            <FormControl required className={classes.formControl}>
-              <InputLabel id="demo-simple-select-required-label">
-                Search By
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-required-label"
-                id="demo-simple-select-required"
-                value={SearchBy}
-                onChange={(e) => setSearchBy(e.target.value)}
-                className={classes.selectEmpty}
-              >
-                <MenuItem default value={"All"}>
-                  All
-                </MenuItem>
-                <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-                <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-                <MenuItem value={"Teacher_Name"}>Teacher Name</MenuItem>
-                <MenuItem value={"Year"}>Teacher Name</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              variant="outlined"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
-          <FormControl required className={classes.formControl}>
-            <InputLabel id="demo-simple-select-required-label">Year</InputLabel>
-            <Select
-              labelId="demo-simple-select-required-label"
-              id="demo-simple-select-required"
-              value={SearchBy}
-              onChange={(e) => setSearchBy(e.target.value)}
-              className={classes.selectEmpty}
-            >
-              <MenuItem default value={"All"}>
-                All
-              </MenuItem>
-              <MenuItem value={"Course_Name"}>Course Name</MenuItem>
-              <MenuItem value={"Course_ID"}>Course ID</MenuItem>
-              <MenuItem value={"Teacher_Name"}>Teacher Name</MenuItem>
-              <MenuItem value={"Year"}>Teacher Name</MenuItem>
-            </Select>
-          </FormControl>
-        </div> 
-        <div className={classes.create}>
-        {+state.role ===4 &&   <Button variant="contained" classes={classes.create} color="primary" onClick={() => setCreateOpen(true)}>Request Course</Button>}
-        
-        </div>
-        <Divider />
-        <TableContainer component={Paper}>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="a dense table"
-          >
-            <TableHead>
-              <TableRow>
-                {tableHeader.map((Data) => (
-                  <TableCell>{Data}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {course.map(data =>  <TableRow>
-                <TableCell component="th" scope="row"> 
-                  {data.course_id}
-                </TableCell>
-                <TableCell >{data.course_name}</TableCell>
-                <TableCell >{data.major_name}</TableCell>
-              
-            </TableRow>)}
-       </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-      {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} semester={semester} />}
-    </>
-  );
-};
-
-const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
+export const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 {
+  
   const [form,setForm] = useState({});
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
@@ -221,6 +43,7 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
   {
     setForm({...form,
       [e.target.name]:e.target.value})
+   
   }
 
   const handleSubmit = async (e)=>
