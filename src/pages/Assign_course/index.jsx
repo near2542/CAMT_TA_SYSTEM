@@ -22,11 +22,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Input from "@material-ui/core/Input";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
-import NativeSelect from "@material-ui/core/NativeSelect";
 import { title } from "../../store/title";
 import Data from "../components/tableHeader.json";
 import axios from "axios";
@@ -133,7 +129,7 @@ export const AssignCourse = () => {
 
   const [currentModal,setCurrentModal] = useState({});
   const [createOpen,setCreateOpen] = useState(false);
-  const [course,setCourse] = useState(null);
+  const [course,setCourse] = useState([]);
   const semesterMaster = useSelector((state) => state.master.semester);
   const [assignCourse,setassignCourse] = useState([]);
   const [teachers,setTeachers] = useState(null)
@@ -143,13 +139,13 @@ export const AssignCourse = () => {
   const [tableHeader, SetTableHeader] = useState([]);
   const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
   const [filterCourse, setFilterCourse] = useState([])
-  
   useEffect(async () => {
     try{    
     const course = await axios.get('/allcourses.php');
     const teacher = await axios.get('/teachers.php');
     const semester = await axios.get('/semester.php');
     assignFetch();
+    console.log('course',course.data);
     setCourse(course.data);
     setTeachers(teacher.data);
     setSemester(semester.data);
@@ -241,9 +237,8 @@ export const AssignCourse = () => {
                <TableCell>{data.year}</TableCell>
                <TableCell>{data.course_id}</TableCell>
                <TableCell>{data.course_name}</TableCell>
-               <TableCell>{data.f_name} {data.l_name}</TableCell>
+              {state.role !== '4' &&  <TableCell>{data.f_name} {data.l_name}</TableCell>}
                <TableCell>{data.major_name}</TableCell>
-
                <TableCell>{data.section}</TableCell>
                <TableCell>{data.day}</TableCell>
                <TableCell>{data.t_time}</TableCell>

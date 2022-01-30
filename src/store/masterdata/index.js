@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import  axios from '../../shared/axios'
 
 const initialState = {
     major: [],
@@ -13,6 +13,7 @@ export const masterSlice = createSlice({
     initialState,
     reducers: {
         majorReducer: (state, action) => {
+            // if(state.major.length < 1) {const {data} = axios.get('/major.php'); state.major= data}
             state.major = action.payload;
         },
         dayworkReducer: (state, action) => {

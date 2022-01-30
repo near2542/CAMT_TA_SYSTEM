@@ -35,17 +35,20 @@ import Searchbox from '../components/Searchbox'
 
 export const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
 {
-  
-  const [form,setForm] = useState({});
-  const classes = useStyles();
+  const state = useSelector((state) => state.auth);
   const daywork = useSelector((state) => state.master.daywork);
+  const [form,setForm] = useState({user_id: state.role === '4' ? state.id : null});
+  const classes = useStyles();
+
+  console.log('MyState',state)
   const handleChange =(e) =>
   {
     setForm({...form,
+     
       [e.target.name]:e.target.value})
    
   }
-
+console.log(form)
   const handleSubmit = async (e)=>
   {
     try{
@@ -126,7 +129,7 @@ export const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course
                 name="user_id"
                 onChange={handleChange}
                 value={form.user_id}
-             
+                disabled={state.role === '4'}
               >
                 {teachers.map(teacher=> 
                 (<MenuItem value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
