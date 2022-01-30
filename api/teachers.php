@@ -106,7 +106,6 @@ $sql = "UPDATE user_tbl SET username=:username,
 $bindingParams =  [
     ':user_id'=> $decode['user_id'],
     ':username' => $decode['username'],
-    ':password' => $decode['password'],
     ':firstname' => $decode['f_name'],
     ':lastname' => $decode['l_name'],
     ':major' => $decode['major_id'],
