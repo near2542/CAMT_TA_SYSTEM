@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 export const AssignTA = () => {
   const dispatch = useDispatch();
   const titleName = {
-    title: "Assign for TA job",
+    title: "Register TA Job",
   };
   dispatch(title(titleName));
   const classes = useStyles();
@@ -107,8 +107,6 @@ export const AssignTA = () => {
   const state = useSelector((state) => state.auth);
   const assignFetch = async () => {
     let assign = null;
-    console.log('role', state.role);
-    console.log('id', state.id);
     assign = `/job_register.php?user=${state.id}`
     const { data } = await axios.get(assign)
     setassignCourse(data);
@@ -225,7 +223,6 @@ export const AssignTA = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(assignCourse)}
               {assignCourse.map(data => (<TableRow key={data.m_course_id}>
                 <TableCell>{data.course_id}</TableCell>
                 <TableCell>{data.course_name}</TableCell>

@@ -5,7 +5,7 @@ require_once './db_config.php';
 if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
     try{
-        $sql = "SELECT user_id,username,f_name,l_name,major_name,cmu_mail,tel from user_tbl  u
+        $sql = "SELECT user_id,username,f_name,l_name,major_name,cmu_mail,tel,u.major_id from user_tbl  u
         INNER JOIN major m ON u.major_id = m.major_id  
         WHERE  user_type = 4 and u.deleted = 0;";
         $row = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -100,7 +100,8 @@ $sql = "UPDATE user_tbl SET username=:username,
                             cmu_mail=:cmu_mail,
                             line_id=:line_id,
                             facebook_link=:facebook_link
-        
+                            WHERE true
+                            AND user_id = :user_id
 ";
 
 $bindingParams =  [
@@ -121,14 +122,14 @@ if(isset($decode['password']))
  $sql .= ",password=:pass";
  $bindingParams[':pass'] = password_hash($decode['password'],PASSWORD_BCRYPT,['cost'=>12]);
 }
-$sql .= " WHERE user_id = :user_id;";
+
 $statement = $db->prepare($sql);
 $result = $statement->execute(
      $bindingParams
     );
     http_response_code(200);
     $encode = json_encode($result);
-    echo $encode;
+     die(json_encode($encode));
 }
 catch(Exception $e)
 {
@@ -141,8 +142,6 @@ catch(Exception $e)
 else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $id = $_GET['id'];
    echo $_SERVER['REQUEST_METHOD'];
-
-
     $sql = "UPDATE user_tbl SET 
                 deleted=1
                 WHERE user_id=:id;";

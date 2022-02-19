@@ -11,11 +11,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import axios from '../shared/axios';
+import axios from 'axios';
 import {useDispatch , useSelector} from 'react-redux'
-import {checkAuth} from '../store/auth';
+import {LoginAction} from '../store/auth';
 import {Redirect} from 'react-router-dom'
 import FormHelperText from '@material-ui/core/FormHelperText';
+import jwtDecode from 'jwt-decode';
 function Copyright() {
 
 
@@ -62,6 +63,7 @@ export  function Login() {
   if(state.auth) history.push('/home')
 
   const dispatch = useDispatch();
+
   const classes = useStyles();
   const [OnSubmit,setOnSubmit] = useState(false);
   const [user,setUser] = useState({
@@ -76,25 +78,28 @@ export  function Login() {
     e.preventDefault();
     setOnSubmit(!OnSubmit)
     try{
-
     const {status,data} = await axios.post('/login.php',user);
-    if(data.false) throw new Error(data.error);
+    console.log('does this still work')
+  
+    if(!data.ACCESS_TOKEN) throw new Error(data.error);
+  
+    dispatch(LoginAction(data));
     setLoginError(null);
-    dispatch(checkAuth(data));
-   console.log(data);
-    history.push('/home')
+    history.replace('/home')
     }
     catch(err)
     {
+
+      console.log(err)
       if(err) setLoginError(err.message);
-      console.log(err.message)
     }
     finally{
-      
+
       setOnSubmit(false)
+      return;
     }
    
-    return;
+   
 
   }
   return (

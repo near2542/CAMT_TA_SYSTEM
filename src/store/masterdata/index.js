@@ -5,7 +5,6 @@ const initialState = {
     major: [],
     daywork: [],
     semester: [],
-
 }
 
 export const masterSlice = createSlice({

@@ -94,10 +94,12 @@ export const AvaliableCourse = () => {
   dispatch(title(titleName));
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
-  const semester = dispatch(state => state.semester)
+  const semester = useSelector(state => state.master.semester)
+  console.log(semester);
   const [tableHeader, SetTableHeader] = useState([]);
   const [course,setCourses] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
+  const [teachers,setTeacher] = useState([])
   const [createOpen,setCreateOpen] = useState(false);
   useEffect(async() => {
     if (state.role == 4) {
@@ -108,7 +110,10 @@ export const AvaliableCourse = () => {
     }
     try{
     const {data} = await axios.get('/available_courses.php');
+    const teacher = await axios.get('/teachers.php');
+
     setCourses(data);
+    setTeacher(teacher.data);
     }
     catch(err)
     {
@@ -207,7 +212,7 @@ export const AvaliableCourse = () => {
           </Table>
         </TableContainer>
       </div>
-      {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} semester={semester} />}
+      {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} semester={semester} course={course} teachers={teachers}/>}
     </>
   );
 };
@@ -230,6 +235,7 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
     //request
     console.log('submitted-form here',form);
     await axios.post('/assign_courses.php',form)
+
     refetch();
     setOpen(false);
     alert('success');

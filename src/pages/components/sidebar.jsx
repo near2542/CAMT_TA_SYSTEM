@@ -21,6 +21,7 @@ import { AdminMenuList, TeacherMenuList, TAMenuList } from "./sidebarRouting";
 import { role } from "../../shared";
 import { majorReducer,dayworkReducer,semesterReducer } from "../../store/masterdata";
 import HomeIcon from "@material-ui/icons/Home";
+
 const drawerWidth = 240;
 
 
@@ -66,6 +67,8 @@ const useStyles = makeStyles((theme) => ({
 function ResponsiveDrawer(props) {
   const dispatch = useDispatch()
   const state = useSelector((state) => state.auth);
+  const { auth } = useSelector((state) => state);
+  console.log(auth)
   const title = useSelector((state) => state.title.title);
 
   const { window, children } = props;
@@ -196,9 +199,9 @@ function ResponsiveDrawer(props) {
         <Link className={classes.Link} to="/logout">
         <ListItem
           button
-          onClick={() => {
-            console.log("log out");
-          }}
+          // onClick={() => {
+          //   console.log("log out");
+          // }}
         >
           <ListItemIcon>
             <HomeIcon />
@@ -213,7 +216,8 @@ function ResponsiveDrawer(props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  return state.auth?(
+    const token = localStorage.getItem('TAcamt-Auth')??  null 
+  return token?(
 
     <div className={classes.root}>
 

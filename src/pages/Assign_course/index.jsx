@@ -133,11 +133,11 @@ export const AssignCourse = () => {
 
   const [currentModal,setCurrentModal] = useState({});
   const [createOpen,setCreateOpen] = useState(false);
-  const [course,setCourse] = useState(null);
-  const semesterMaster = useSelector((state) => state.master.semester);
+  const [course,setCourse] = useState([]);
+  // const semester = useSelector((state) => state.master.semester);
+  const [semester,setSemester] = useState([])
   const [assignCourse,setassignCourse] = useState([]);
   const [teachers,setTeachers] = useState(null)
-  const [semester,setSemester] = useState(semesterMaster)
   const [editOpen,setEditOpen] = useState(false)
   const [deleteOpen,setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
@@ -156,6 +156,7 @@ export const AssignCourse = () => {
     }
     catch(err)
     {
+      console.log('its error')
       location.push('/auth');
       console.log(err.number);
     }
@@ -471,7 +472,7 @@ const EditDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
   // const majorList = useSelector((state) => state.master.major);
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
-  console.log(form);
+ 
   const handleChange =(e) =>
   {
     setForm({...form,

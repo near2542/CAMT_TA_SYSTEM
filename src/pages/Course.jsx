@@ -99,7 +99,7 @@ export const Course = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
   useEffect(() => {
-    if (!state.auth) location.push('/auth');
+   
     try {
       fetchCourses(); 
     }
@@ -370,7 +370,7 @@ const EditDialog = ({ data, setOpen, open, refetch }) => {
                 name="major_id"
               >
                 {majorList.map(major =>
-                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                  (<MenuItem  value={major.major_id}>{major.major_name}</MenuItem>))
                 }
 
               </Select>

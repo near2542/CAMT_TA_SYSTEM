@@ -387,9 +387,11 @@ const CreateDialog = ({data,setOpen,open,refetch}) =>
 const EditDialog = ({data,setOpen,open,refetch}) =>
 {
     const [form,setForm] = useState({...data,password:null});
-    console.log(form);
+    console.log(form)
+    console.log(data);
     const classes = useStyles();
     const majorList = useSelector((state) => state.master.major);
+    console.log(majorList)
     const handleChange =(e) =>
     {
       setForm({...form,

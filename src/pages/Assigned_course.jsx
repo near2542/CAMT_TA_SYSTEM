@@ -171,7 +171,7 @@ export const AssignCouse = () => {
               <MenuItem value={"Year"}>Teacher Name</MenuItem>
             </Select>
           </FormControl> */}
-          <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
+          {(Number(state.role) === 3 || Number(state.role) === 4) && <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>}
         </div>
 
         <Divider />

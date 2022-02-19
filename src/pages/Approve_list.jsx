@@ -152,7 +152,6 @@ export const Approved_list = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(assignCourse)}
               {assignCourse.map(data => (<TableRow key={data.register_id.toString()}>
                 <TableCell>{data.course_id}</TableCell>
                 <TableCell>{data.course_name}</TableCell>

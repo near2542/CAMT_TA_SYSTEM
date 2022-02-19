@@ -2,7 +2,7 @@
 $server = $_ENV['DB_SERVER']? $_ENV['DB_SERVER'] : "localhost";
 $username = $_ENV['DB_USERNAME'] ? $_ENV['DB_USERNAME'] : "root";
 $password =$_ENV['DB_PASSWORD']? $_ENV['DB_PASSWORD'] : "";
-$dbname = $_ENV['DB_NAME']? $_ENV['DB_NAME'] :  "tasys";
+$dbname = $_ENV['DB_NAME']? $_ENV['DB_NAME'] :  "tasys3";
 
 try{
 $db = new PDO("mysql:host=$server;dbname=$dbname",$username,$password);

@@ -17,14 +17,15 @@ function checkDuplicateSection($db,$decode)
     {   $sqlTest = "SELECT m_course_id FROM matching_course m
            INNER JOIN course c ON    c.id = m.courseID 
            INNER JOIN user_tbl u ON m.user_id = u.user_id
-           WHERE m.courseID = :course_id AND section = :section AND c.deleted = 0 AND m.deleted = 0  AND u.deleted = 0;
-                 AND sem_id = :sem_id ";
+           WHERE m.courseID = :course_id AND section = :section AND c.deleted = 0 AND m.deleted = 0  AND u.deleted = 0 ;
+                 AND sem_id = :sem_id AND m_course_id.id = :id ";
            $statementTest = $db->prepare($sqlTest);
 
            $statementTest->execute([
                ':course_id' => $decode['course_id'],
                ':section' => $decode['section'],
                ':sem_id' => $decode['sem_id'],
+               ':id' => $decode['id'],
            ]);
 
            $isExistedSection = count($statementTest->fetchAll());

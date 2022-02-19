@@ -29,19 +29,26 @@ $decode = json_decode($input,true);
 try{
     header("HTTP/1.1 200 OK");
     $sql = "SELECT user_id,username,password,user_type,student_id from  user_tbl 
-            WHERE username = :username AND deleted = 0 ";
+            WHERE username = :username AND (deleted = 0 or deleted is null) ";
     $statement = $db->prepare($sql);
     $result = $statement->execute(
         [
             ':username' => $decode['username'],
         ]   
         );
+        try{
     $row = $statement->fetch(PDO::FETCH_ASSOC);
+        }
+        catch(Exception $e)
+        {
+            die($e->getMessage());
+        }
 
     if($result && $statement->rowCount() > 0)
     {        
             $checkPassword = password_verify($decode['password'],$row['password']);
             // echo $checkPassword;
+            
             if($checkPassword) 
          {   
             
@@ -50,25 +57,22 @@ try{
                 "role" => $row['user_type'],
                 "id" => $row['user_id'],
                 "iat" => time(),
-                "nbf" => time()+(60*60)
+                "nbf" => time()+10,
+                "exp"=> time() +(60*60),
             );
             $JWT = JWT::encode($payload,$key);
-            setcookie('refresh_token',JWT::encode($payload,$key),60*60*24*7);
+            setcookie('refresh_token',JWT::encode($payload,$refresh_key),time()+60*60*24*7);
             die(json_encode(
                 [
-                
-                'id'=>$row['user_id'],
-                'username'=>$row['username'],
-                'role'=>$row['user_type'],
-                'auth' => true,
+                'status'=>'success',
                 'ACCESS_TOKEN' => $JWT
                 ]));
             }
 
-            die(json_encode(['false'=>true,'error'=>'Email or Password not correct']));
+            die(json_encode(['false'=>true,'error'=>'Email or Password not correct',$row]));
     }
     else {
-        die(json_encode(['false'=>true,'error'=>'Email or Password not correct']));
+        die(json_encode(['false'=>true,'error'=>'Email or Password not correct','not matching pass'=>$row]));
     }
         
     }

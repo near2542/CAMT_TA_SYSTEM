@@ -1,4 +1,5 @@
 <?php
+require_once('./header.php');
 require_once './db_config.php';
 require('./vendor/autoload.php');
 header("Content-Type: application/json");

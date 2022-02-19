@@ -3,54 +3,55 @@ require_once('./Class/JWTauth.php');
 require_once('./header.php');
 require_once('./db_config.php');
 
-use Auth\JWTauth;
 
-$jwt = 'test';
+function checkDuplicateCourse($db, $data)
+{
 
-function checkDuplicateCourse($db,$data)
-{   
+    try {
+        $sql = "SELECT id from course WHERE course_id = :course_id AND major_id = :major_id AND deleted = 0 AND id != :id";
 
-    try{
-    $sql = "SELECT id from course WHERE course_id = :course_id AND major_id = :major_id AND deleted = 0";
-    $statement = $db->prepare($sql);
-    $statement->execute([
-        ':course_id' => $data['course_id'],
-        ':major_id' => $data['major_id'],
-    ]);
-    $isExistedSection = count($statement->fetchAll());
-    if($isExistedSection > 0) {http_response_code(400);die(json_encode(['error'=>'Duplicate Course ID or Major']));}
-    return;
+        $statement = $db->prepare($sql);
+
+        $statement->execute([
+            ':course_id' => $data['course_id'],
+            ':major_id' => $data['major_id'],
+            ':id' => $data['id']
+        ]);
+
+        $isExistedSection = count($statement->fetchAll());
+        if ($isExistedSection > 0) {
+            http_response_code(400);
+            die(json_encode(['error' => 'Duplicate Course ID or Major']));
+        }
+        return;
+    } catch (Exception $e) {
+        print_r($statement);
+        die(json_encode($e->getMessage()));
+    }
 }
-catch(Exception $e)
 
-{   print_r($statement);
-    die(json_encode($e->getMessage()));
-}
-}
-
-function checkIfAssigned($id,$db)
+function checkIfAssigned($id, $db)
 {
     $intID = (int)$id;
-    try{
+    try {
         $sql = "SELECT m.m_course_id from course c
                 LEFT JOIN matching_course m ON m.courseID = c.id
                 WHERE m.courseID = :course_id 
                 AND m.deleted = 0;";
-        
+
         $statementTest = $db->prepare($sql);
 
-           $statementTest->execute([
-               ':course_id' => $intID,
-           ]);
+        $statementTest->execute([
+            ':course_id' => $intID,
+        ]);
 
-           $isAssigned = count($statementTest->fetchAll());
-           if($isAssigned > 0) {
+        $isAssigned = count($statementTest->fetchAll());
+        if ($isAssigned > 0) {
             http_response_code(400);
-            die(json_encode(['error'=>'Course is assigned, cannot be deleted or edited']));}
-           return;
-    }
-    catch(Exception $e)
-    {
+            die(json_encode(['error' => 'Course is assigned, cannot be deleted or edited']));
+        }
+        return;
+    } catch (Exception $e) {
         echo $intID;
         die($e->getMessage());
     }
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);
-    checkDuplicateCourse($db,$decode);
+    checkDuplicateCourse($db, $decode);
     try {
         $sql = "INSERT INTO course values (NULL,:course_id,:course_name,:major_id,0);";
         $statement = $db->prepare($sql);
@@ -90,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $input = file_get_contents('php://input');
     $decode = json_decode($input, true);
-    checkDuplicateCourse($db,$decode);
-    checkIfAssigned($decode['id'],$db);
+    checkDuplicateCourse($db, $decode);
+    checkIfAssigned($decode['id'], $db);
     $sql = "UPDATE course SET course_id=:course_id,
              course_name=:course_name,
             major_id=:major_id
@@ -107,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($result);
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $id = $_GET['id'];
-    checkIfAssigned($id,$db);
+    checkIfAssigned($id, $db);
     $sql = "UPDATE course SET 
                 deleted=1
                 WHERE id=:id;";
@@ -118,4 +119,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     echo json_encode($result);
 }
-
