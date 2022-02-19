@@ -6,6 +6,7 @@ let token = localStorage.getItem('ACCESS_TOKEN') ? JSON.parse(localStorage.getIt
 
 
 const status = process.env.NODE_ENV
+<<<<<<< HEAD
 axios.defaults.withCredentials = true;
 
 axios.defaults.baseURL = status === 'production'? process.env.REACT_APP_BASE_URL_PROD: process.env.REACT_APP_BASE_URL_DEV;
@@ -43,5 +44,9 @@ axios.interceptors.response.use(
     return await axios.get('/refresh_token')
   }
 
+=======
+axios.defaults.baseURL = status === 'production'? process.env.REACT_APP_BASE_URL_PROD: 'http://localhost/Frontend-naja/api';
+axios.defaults.withCredentials = true;
+>>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
 export default axios;
 

@@ -94,12 +94,21 @@ export const AvaliableCourse = () => {
   dispatch(title(titleName));
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
+<<<<<<< HEAD
   const semester = useSelector(state => state.master.semester)
   console.log(semester);
   const [tableHeader, SetTableHeader] = useState([]);
   const [course,setCourses] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
   const [teachers,setTeacher] = useState([])
+=======
+  const semester = useSelector((state) => state.master.semester);
+  console.log(semester)
+  const [tableHeader, SetTableHeader] = useState([]);
+  const [course,setCourses] = useState([]);
+  const [SearchBy, setSearchBy] = useState("All");
+  const [teacher,setTeacher] = useState([])
+>>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
   const [createOpen,setCreateOpen] = useState(false);
   useEffect(async() => {
     if (state.role == 4) {
@@ -111,9 +120,14 @@ export const AvaliableCourse = () => {
     try{
     const {data} = await axios.get('/available_courses.php');
     const teacher = await axios.get('/teachers.php');
+<<<<<<< HEAD
 
     setCourses(data);
     setTeacher(teacher.data);
+=======
+    setCourses(data);
+    setTeacher(teacher.data)
+>>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
     }
     catch(err)
     {
@@ -160,7 +174,7 @@ export const AvaliableCourse = () => {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-            />
+            />  
           </div>
           <FormControl required className={classes.formControl}>
             <InputLabel id="demo-simple-select-required-label">Year</InputLabel>
@@ -201,7 +215,7 @@ export const AvaliableCourse = () => {
             </TableHead>
             <TableBody>
             {course.map(data =>  <TableRow>
-                <TableCell component="th" scope="row"> 
+                <TableCell component="th" scope="row">
                   {data.course_id}
                 </TableCell>
                 <TableCell >{data.course_name}</TableCell>
@@ -212,19 +226,28 @@ export const AvaliableCourse = () => {
           </Table>
         </TableContainer>
       </div>
+<<<<<<< HEAD
       {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} semester={semester} course={course} teachers={teachers}/>}
+=======
+      {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} course={course} semester={semester} teacher={teacher} />}
+>>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
     </>
   );
 };
 
-const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
+const CreateDialog = ({data,setOpen,open,refetch,semester,teacher,course}) =>
 {
-  const [form,setForm] = useState({});
+  const state = useSelector((state) => state.auth);
+  const [form,setForm] = useState({['user_id']:state.role === '4'? state.id:null});
+  console.log(state)
+  console.log(teacher)
   const classes = useStyles();
   const daywork = useSelector((state) => state.master.daywork);
+  console.log(semester)
   const handleChange =(e) =>
   {
     setForm({...form,
+      
       [e.target.name]:e.target.value})
   }
 
@@ -309,86 +332,19 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teachers,course}) =>
                 name="user_id"
                 onChange={handleChange}
                 value={form.user_id}
+                disabled={state.role === '4'}
              
               >
-                {teachers.map(teacher=> 
+                {teacher.map(teacher=> 
                 (<MenuItem value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
                 }
                
               </Select>
             </FormControl>
           
-            <TextField
-            required
-            margin="dense"
-            id="section"
-            name="section"
-            value={form.section}
-            onChange={handleChange}
-            label="Section"
-            type="text"
-            placeholder="Ex. 001"
-            fullWidth
-          />
-            <FormControl required className={classes.selectField}>
-              <InputLabel id="demo-simple-select-required-label">
-               Day
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-required-label"
-                id="demo-simple-select-required"
-                name="day"
-                onChange={handleChange}
-                value={form.day}
-               
-              >
-                {daywork.map(day=> 
-                (<MenuItem value={day.id}>{day.day}</MenuItem>))
-                }
-              </Select>
-            </FormControl>
-            <TextField
-            required
-            margin="dense"
-            id="work_time"
-            name="work_time"
-            value={form.work_time}
-            onChange={handleChange}
-            label="Work Tme"
-            type="text"
-            placeholder="Ex. 1430-1600"
-            fullWidth
-          />
-          <TextField
-            required
-            margin="dense"
-            id="hour"
-            name="hour"
-            value={form.hour}
-            onChange={handleChange}
-            label="Hour Per Week"
-            type="text"
-            placeholder="Hours"
-            fullWidth
-          />
-            <FormControl required className={classes.selectField}>
-              <InputLabel id="demo-simple-select-required-label">
-               Language
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-required-label"
-                id="demo-simple-select-required"
-                name="language"
-                onChange={handleChange}
-                value={form.language}
-               
-              >
-                {['Thai','Eng'].map(lang=> 
-                (<MenuItem value={lang} >{lang}</MenuItem>))
-                }
-               
-              </Select>
-            </FormControl>
+        
+           
+          
        
             
         </DialogContent>
