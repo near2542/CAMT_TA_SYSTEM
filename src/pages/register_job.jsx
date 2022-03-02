@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import clsx from 'clsx';
 import { alpha, makeStyles } from "@material-ui/core/styles";
@@ -104,7 +104,7 @@ export const RegisterJob = () => {
   console.log(process.env.NODENV);
   dispatch(title(titleName));
   const classes = useStyles();
-  let location = useHistory();
+  let navigate = useNavigate();
   const state = useSelector((state) => state.auth);
   const assignFetch = async () => {
     let assign = null;
@@ -141,7 +141,7 @@ export const RegisterJob = () => {
     }
     catch (err) {
 
-      location.push('/auth');
+      navigate('/auth',{replace:true});
       console.log(err.number);
     }
     if (state.role == 4) {

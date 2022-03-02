@@ -1,9 +1,8 @@
-import React,{useState} from 'react';
+import {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import {useHistory} from 'react-router-dom'
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,11 +11,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import {useDispatch , useSelector} from 'react-redux'
+import {useDispatch } from 'react-redux'
 import {LoginAction} from '../store/auth';
-import {Redirect} from 'react-router-dom'
 import FormHelperText from '@material-ui/core/FormHelperText';
-import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 function Copyright() {
 
 
@@ -58,9 +57,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export  function Login() {
-  let history = useHistory();
-  const state= useSelector((state)=> state.auth)  
-  if(state.auth) history.push('/home')
+  const {LoginUser,auth} = useAuth;
+  let navigate = useNavigate()
+  if(auth) navigate('/home',{replace:true})
 
   const dispatch = useDispatch();
 
@@ -84,8 +83,9 @@ export  function Login() {
     if(!data.ACCESS_TOKEN) throw new Error(data.error);
   
     dispatch(LoginAction(data));
+    LoginUser(data)
     setLoginError(null);
-    history.replace('/home')
+    navigate('/home',{replace:true})
     }
     catch(err)
     {

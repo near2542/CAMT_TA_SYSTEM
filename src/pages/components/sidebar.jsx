@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from '../../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
 import AppBar from "@material-ui/core/AppBar";
@@ -8,7 +8,7 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import { Link } from "react-router-dom";
+import { Link,Outlet} from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -71,7 +71,7 @@ function ResponsiveDrawer(props) {
   console.log(auth)
   const title = useSelector((state) => state.title.title);
 
-  const { window, children } = props;
+  const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -217,6 +217,7 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
     const token = localStorage.getItem('TAcamt-Auth')??  null 
+    console.log(token)
   return token?(
 
     <div className={classes.root}>
@@ -272,10 +273,10 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {children}
+        <Outlet/>
       </main>
     </div>
-  ): null;
+  ):  null
 }
 
 

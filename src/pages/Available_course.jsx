@@ -94,21 +94,12 @@ export const AvaliableCourse = () => {
   dispatch(title(titleName));
   const classes = useStyles();
   const state = useSelector((state) => state.auth);
-<<<<<<< HEAD
-  const semester = useSelector(state => state.master.semester)
-  console.log(semester);
-  const [tableHeader, SetTableHeader] = useState([]);
-  const [course,setCourses] = useState([]);
-  const [SearchBy, setSearchBy] = useState("All");
-  const [teachers,setTeacher] = useState([])
-=======
   const semester = useSelector((state) => state.master.semester);
   console.log(semester)
   const [tableHeader, SetTableHeader] = useState([]);
   const [course,setCourses] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
   const [teacher,setTeacher] = useState([])
->>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
   const [createOpen,setCreateOpen] = useState(false);
   useEffect(async() => {
     if (state.role == 4) {
@@ -120,14 +111,8 @@ export const AvaliableCourse = () => {
     try{
     const {data} = await axios.get('/available_courses.php');
     const teacher = await axios.get('/teachers.php');
-<<<<<<< HEAD
-
-    setCourses(data);
-    setTeacher(teacher.data);
-=======
     setCourses(data);
     setTeacher(teacher.data)
->>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
     }
     catch(err)
     {
@@ -226,11 +211,7 @@ export const AvaliableCourse = () => {
           </Table>
         </TableContainer>
       </div>
-<<<<<<< HEAD
-      {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} semester={semester} course={course} teachers={teachers}/>}
-=======
       {createOpen && <CreateDialog open={createOpen} setOpen={setCreateOpen} course={course} semester={semester} teacher={teacher} />}
->>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
     </>
   );
 };

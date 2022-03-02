@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function Register() {
   
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [OnSubmit, setOnSubmit] = useState(false);
@@ -129,7 +129,7 @@ export function Register() {
     setError({...formError,username:{status:false,message:''}})
     console.log(response);
     alert('create success');
-    history.push('/auth');
+    navigate.push('/auth',{replace:true});
     }
     catch(err)
     {

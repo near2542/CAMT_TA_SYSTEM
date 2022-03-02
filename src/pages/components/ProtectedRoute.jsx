@@ -1,24 +1,18 @@
 import React, { useEffect,useState } from 'react'
-import { useHistory, Route, Redirect} from "react-router-dom";
+import { useAuth } from '../../context/AuthContext';
+import { useHistory, Route, Navigate,useNavigate,Outlet, useLocation} from "react-router-dom";
 import { useSelector,useDispatch } from 'react-redux'
 import { resetAccess } from '../../store/auth';
+import ResponsiveDrawer from './sidebar';
 export default function ProtectedRoute({children,...rest}) {
     // const navigate = useNavigate();
-    let {auth} = useSelector((state) => state)  
-    let dispatch = useDispatch()
-    let location = useHistory()
-    console.log(auth)
-    useEffect(() => {
-      if (!auth.isSignin) 
-      {   
-          let storage = localStorage.getItem('TAcamt-Auth');
-          if(!storage) return location.push('/auth',{replace:true})
-            dispatch(resetAccess(JSON.parse(storage)))
-      }
+    let {auth,checkTokenExp} = useAuth()
      
-  }, [auth])
+    let location = useLocation()
+    
    
-    return  <Route {...rest} render={()=>{
-        return auth.isSignin ? children :  null
-    }}/>
+    return auth.id ? (
+    <Route element={<ResponsiveDrawer/>}>
+    <Outlet/></Route> ): (<Navigate to='/auth' state={{from:location}} replace/>)
+    
 }

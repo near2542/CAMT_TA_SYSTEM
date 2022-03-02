@@ -1,4 +1,4 @@
-import {useHistory} from 'react-router-dom';
+import {useHistory, useNavigate} from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
@@ -13,7 +13,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
+// import Toolbar from "@material-ui/core/Toolbar";
 import Divider from "@material-ui/core/Divider";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -101,7 +101,7 @@ export const AssignCourse = () => {
   };
   dispatch(title(titleName));
   const classes = useStyles();
-  let location = useHistory();
+  let navigate = useNavigate();
   const state = useSelector((state) => state.auth);
   const options = [
     {label:'ALL',value:'all',default:true},  
@@ -115,7 +115,7 @@ export const AssignCourse = () => {
   {
     let assign = null;
     try{
-    if(state.role==4) assign = await axios.get(`/assign_courses.php?user=${state.id}`);
+    if(state.role===4) assign = await axios.get(`/assign_courses.php?user=${state.id}`);
     else assign = await axios.get('/assign_courses.php');
     setassignCourse(assign.data);
     setFilterCourse(assign.data)
@@ -130,15 +130,10 @@ export const AssignCourse = () => {
   const [currentModal,setCurrentModal] = useState({});
   const [createOpen,setCreateOpen] = useState(false);
   const [course,setCourse] = useState([]);
-<<<<<<< HEAD
-  // const semester = useSelector((state) => state.master.semester);
-  const [semester,setSemester] = useState([])
-=======
-  const semesterMaster = useSelector((state) => state.master.semester);
->>>>>>> 4f2492c81cb50f8a7bf9f12e0f034c6ee2c28638
   const [assignCourse,setassignCourse] = useState([]);
   const [teachers,setTeachers] = useState(null)
   const [editOpen,setEditOpen] = useState(false)
+  const [semester,setSemester] = useState(null)
   const [deleteOpen,setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
   const [searchValue, setSearch] = useState({searchBy:'all',searchValue:'',year:'2564'});
@@ -149,7 +144,6 @@ export const AssignCourse = () => {
     const teacher = await axios.get('/teachers.php');
     const semester = await axios.get('/semester.php');
     assignFetch();
-    console.log('course',course.data);
     setCourse(course.data);
     setTeachers(teacher.data);
     setSemester(semester.data);
@@ -157,7 +151,7 @@ export const AssignCourse = () => {
     catch(err)
     {
       console.log('its error')
-      location.push('/auth');
+      navigate('/auth',{replace:true});
       console.log(err.number);
     }
     if (state.role == 4) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from '../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -118,7 +118,7 @@ export const ApproveTa = () => {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [tableHeader, SetTableHeader] = useState([]);
   const [SearchBy, setSearchBy] = useState("All");
-  const location = useHistory();
+  const navigate = useNavigate();
   console.log(state);
   useEffect(async () => {
     try {
@@ -136,7 +136,7 @@ export const ApproveTa = () => {
     }
     catch (err) {
 
-      location.push('/auth');
+      navigate('/auth',{replace:true});
       console.log(err.number);
     }
     if (state.role == 1) {

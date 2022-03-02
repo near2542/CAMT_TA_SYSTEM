@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef } from "react";
 import axios from '../shared/axios';
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -91,7 +91,7 @@ export const Course = () => {
   }
 
   dispatch(title(titleName));
-  const location = useHistory();
+  const navigate = useNavigate();
   const state = useSelector((state) => state.auth);
   const [currentModal, setCurrentModal] = useState();
   const [createOpen, setCreateOpen] = useState(false)
