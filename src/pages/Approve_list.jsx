@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export const Approved_list = () => {
+export const ApprovedList = () => {
   const dispatch = useDispatch();
   const titleName = {
     title: "Approved TA",

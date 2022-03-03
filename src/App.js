@@ -2,12 +2,12 @@
 import './App.css';
 import {
   Routes,
-  Route
+  Route,
+  Navigate
   // Switch,
 } from "react-router-dom";
 import { Login } from './pages/login';
 import { Register } from './pages/register';
-import ResponsiveDrawer from './pages/components/sidebar';
 import ProtectedRoute from './pages/components/ProtectedRoute'
 import { Homepage } from './pages/Homepage'
 import { Course } from './pages/Course';
@@ -21,13 +21,13 @@ import { Teacher } from './pages/Teacher';
 import { RequestTA } from './pages/Request_ta';
 import { Logout } from './pages/logout';
 import { RegisterJob } from "./pages/register_job";
-import { Approved_list } from './pages/Approve_list';
+import { ApprovedList } from './pages/Approve_list';
 function App() {
   return (
 
     <Routes>
       <Route path="/" >
-        <Route />
+       
         <Route
           path='auth'
           element={<Login/>}
@@ -52,8 +52,9 @@ function App() {
           <Route path="logout" element={<Logout/>} />
           <Route path="register_job" element={<RegisterJob/>} />
           <Route path="approve_request" element={<ApproveRequest/>} />
-          <Route path="approved_ta" element={<Approved_list/>} />
+          <Route path="approved_ta" element={<ApprovedList/>} />
         </Route>
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Route>
     </Routes>

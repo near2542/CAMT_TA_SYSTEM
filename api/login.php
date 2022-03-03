@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 
 
 
+
 $input = file_get_contents('php://input');
 $decode = json_decode($input,true);
 if(!$input || $_SERVER['REQUEST_METHOD'] !== 'POST') 
@@ -26,8 +27,8 @@ if(!$input || $_SERVER['REQUEST_METHOD'] !== 'POST')
 
 $decode = json_decode($input,true);
 
+
 try{
-    header("HTTP/1.1 200 OK");
     $sql = "SELECT user_id,username,password,user_type,student_id from  user_tbl 
             WHERE username = :username AND (deleted = 0 or deleted is null) ";
     $statement = $db->prepare($sql);
@@ -46,12 +47,11 @@ try{
 
     if($result && $statement->rowCount() > 0)
     {        
+
             $checkPassword = password_verify($decode['password'],$row['password']);
-            // echo $checkPassword;
             
             if($checkPassword) 
          {   
-            
             $payload = array(
                 "username" => $row['username'],
                 "role" => $row['user_type'],
@@ -68,17 +68,16 @@ try{
                 'ACCESS_TOKEN' => $JWT
                 ]));
             }
-
-            die(json_encode(['false'=>true,'error'=>'Email or Password not correct',$row]));
+        
+            die(json_encode(['error'=>'Email or Password not correct','status'=>401]));
     }
     else {
-        die(json_encode(['false'=>true,'error'=>'Email or Password not correct','not matching pass'=>$row]));
+        die(json_encode(['error'=>'Email or Password not correct','status'=>401]));
     }
         
     }
     catch(Exception $e)
     {
-        http_response_code(400);
         die(json_encode($e->getMessage()));
         // echo json_encode(['error'=>'Username has been taken']);
         exit(-1);
@@ -87,7 +86,3 @@ try{
 //  $dotenv = Dotenv::createImmutable(__DIR__);
 //  $dotenv->load();
 //  echo json_encode($jwt);
-
-
-
-?>

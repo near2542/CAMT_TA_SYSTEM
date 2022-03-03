@@ -10,9 +10,10 @@ export default function ProtectedRoute({children,...rest}) {
      
     let location = useLocation()
     
+    console.log(auth);
    
-    return auth.id ? (
-    <Route element={<ResponsiveDrawer/>}>
-    <Outlet/></Route> ): (<Navigate to='/auth' state={{from:location}} replace/>)
+    return auth.user_id ? (
+    <ResponsiveDrawer>
+    <Outlet/></ResponsiveDrawer> ): (<Navigate to='/auth' state={{from:location}} replace/>)
     
 }

@@ -20,6 +20,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { AdminMenuList, TeacherMenuList, TAMenuList } from "./sidebarRouting";
 import { role } from "../../shared";
 import { majorReducer,dayworkReducer,semesterReducer } from "../../store/masterdata";
+import { useAuth } from "../../context/AuthContext";
 import HomeIcon from "@material-ui/icons/Home";
 
 const drawerWidth = 240;
@@ -65,9 +66,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
+  console.log('reach here?')
   const dispatch = useDispatch()
+  
   const state = useSelector((state) => state.auth);
-  const { auth } = useSelector((state) => state);
+  const { auth } = useAuth();
   console.log(auth)
   const title = useSelector((state) => state.title.title);
 
@@ -131,7 +134,7 @@ function ResponsiveDrawer(props) {
         </Link>
       </List>
       <Divider />
-      {state.role == 1 && (
+      {+auth.role === 1 && (
         <>
           <List>
             {AdminMenuList.map((text, index) => (
@@ -147,7 +150,7 @@ function ResponsiveDrawer(props) {
         </>
       )}
 
-      {state.role == 4 && (
+      {+auth.role === 4 && (
         <>
           {" "}
           <List>
@@ -163,7 +166,7 @@ function ResponsiveDrawer(props) {
           <Divider />
         </>
       )}
-      {state.role == 3 && (
+      {+auth.role === 3 && (
         <>
           <List>
             {TAMenuList.map((text, index) => (
@@ -179,7 +182,7 @@ function ResponsiveDrawer(props) {
         </>
       )}
 
-      {state.role == 2 && (
+      {+auth.role === 2 && (
         <>
           <List>
             {TAMenuList.map((text, index) => (
@@ -217,7 +220,6 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
     const token = localStorage.getItem('TAcamt-Auth')??  null 
-    console.log(token)
   return token?(
 
     <div className={classes.root}>
@@ -273,7 +275,7 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Outlet/>
+        {props.children}
       </main>
     </div>
   ):  null

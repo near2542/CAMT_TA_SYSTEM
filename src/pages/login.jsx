@@ -16,6 +16,7 @@ import {LoginAction} from '../store/auth';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 function Copyright() {
 
 
@@ -56,10 +57,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export  function Login() {
-  const {LoginUser,auth} = useAuth;
+export  function  Login() {
+  const {LoginUser,auth} = useAuth();
   let navigate = useNavigate()
-  if(auth) navigate('/home',{replace:true})
+  
+  useEffect(()=>
+  {
+    if(auth.id) navigate('/home',{replace:true})
+   
+  },[auth,navigate])
 
   const dispatch = useDispatch();
 
@@ -72,20 +78,21 @@ export  function Login() {
   const [loginError,setLoginError] = useState(null);
   
     
-  const Login = async (e) => 
+  const ClickLogin = async (e) => 
   {
     e.preventDefault();
     setOnSubmit(!OnSubmit)
     try{
     const {status,data} = await axios.post('/login.php',user);
     console.log('does this still work')
-  
+    console.log(data)
+    
     if(!data.ACCESS_TOKEN) throw new Error(data.error);
-  
-    dispatch(LoginAction(data));
-    LoginUser(data)
+      
+    let success = await LoginUser(user.username,user.password)
+    console.log(success)
+    if(success) navigate('/home')
     setLoginError(null);
-    navigate('/home',{replace:true})
     }
     catch(err)
     {
@@ -114,7 +121,7 @@ export  function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form}  onSubmit={Login}>
+        <form className={classes.form}  onSubmit={ClickLogin}>
           <TextField
           onChange={(e)=>{
                   setUser({...user,username:e.target.value});
