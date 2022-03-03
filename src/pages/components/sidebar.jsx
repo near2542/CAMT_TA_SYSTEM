@@ -66,12 +66,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ResponsiveDrawer(props) {
-  console.log('reach here?')
   const dispatch = useDispatch()
   
   const state = useSelector((state) => state.auth);
   const { auth } = useAuth();
-  console.log(auth)
   const title = useSelector((state) => state.title.title);
 
   const { window } = props;
@@ -112,12 +110,12 @@ function ResponsiveDrawer(props) {
       <List>
         <ListItem>
           <ListItemText>
-            <Typography color="primary">ROLE: {role[state.role]}</Typography>
+            <Typography color="primary">ROLE: {role[auth.role]}</Typography>
           </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
-            <Typography color="primary">USERNAME: {state.username}</Typography>
+            <Typography color="primary">USERNAME: {auth.username}</Typography>
           </ListItemText>
         </ListItem>
       </List>

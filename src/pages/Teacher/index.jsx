@@ -152,7 +152,7 @@ export const Teacher = () => {
             <TableHead>
               <TableRow>
                 {['Username','First Name','Last Name','major','email','tel','Action'].map((Data) => (
-                  <TableCell>{Data}</TableCell>
+                  <TableCell key={Data}>{Data}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -160,7 +160,7 @@ export const Teacher = () => {
              
                {teacher.map(data => 
                 (<>
-                <TableRow>
+                <TableRow key={`${data.username}1`}>
                  
                 <TableCell >{data.username}</TableCell>
                 <TableCell >{data.f_name}</TableCell>
@@ -313,7 +313,7 @@ const CreateDialog = ({data,setOpen,open,refetch}) =>
                 className={classes.selectEmpty}
               >
                 {majorList.map(major=> 
-                (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                (<MenuItem key={`${major.major_id}1`} value={major.major_id}>{major.major_name}</MenuItem>))
                 }
                
               </Select>
@@ -496,7 +496,7 @@ const EditDialog = ({data,setOpen,open,refetch}) =>
                   className={classes.selectEmpty}
                 >
                   {majorList.map(major=> 
-                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                  (<MenuItem key={`${major.major_id}1`} value={major.major_id}>{major.major_name}</MenuItem>))
                   }
                  
                 </Select>

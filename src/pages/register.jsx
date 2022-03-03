@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import { useNavigate } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from '../store/auth';
+import { useDispatch } from 'react-redux';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Radio,{RadioProps} from '@material-ui/core/Radio';
+import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { Email } from '@material-ui/icons';
 import axios from '../shared/axios';
+import { useAuth } from '../context/AuthContext';
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -53,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
 export function Register() {
   
   const navigate = useNavigate();
+  const {auth} = useAuth()
+  useEffect(()=>
+  {
+    if(auth.id) navigate('/home',{replace:true})
+   
+  },[auth,navigate])
   const dispatch = useDispatch();
   const classes = useStyles();
   const [OnSubmit, setOnSubmit] = useState(false);

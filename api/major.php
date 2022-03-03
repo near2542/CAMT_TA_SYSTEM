@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET')
     catch(Exception $e)
     {
         http_response_code(400);
-        echo json_encode($e->getMessage());
+        echo json_encode(['major' =>$e->getMessage(),'data']);
     }
 
     exit(-1);

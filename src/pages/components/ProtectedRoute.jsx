@@ -10,7 +10,6 @@ export default function ProtectedRoute({children,...rest}) {
      
     let location = useLocation()
     
-    console.log(auth);
    
     return auth.user_id ? (
     <ResponsiveDrawer>

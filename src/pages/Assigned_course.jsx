@@ -184,7 +184,7 @@ export const AssignCouse = () => {
             <TableHead>
               <TableRow>
                 {tableHeader.map((Data) => (
-                  <TableCell>{Data}</TableCell>
+                  <TableCell key={Data.toStirng()}>{Data}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -290,7 +290,7 @@ const CreateDialog = ({ data, setOpen, open, refetch }) => {
                 className={classes.selectEmpty}
               >
                 {majorList.map(major =>
-                  (<MenuItem value={major.major_id}>{major.major_name}</MenuItem>))
+                  (<MenuItem key={major.major_id.toStirng()} value={major.major_id}>{major.major_name}</MenuItem>))
                 }
 
               </Select>

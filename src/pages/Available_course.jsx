@@ -194,12 +194,12 @@ export const AvaliableCourse = () => {
             <TableHead>
               <TableRow>
                 {tableHeader.map((Data) => (
-                  <TableCell>{Data}</TableCell>
+                  <TableCell key={Data.toString()}>{Data}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-            {course.map(data =>  <TableRow>
+            {course.map(data =>  <TableRow key={data}>
                 <TableCell component="th" scope="row">
                   {data.course_id}
                 </TableCell>
@@ -281,7 +281,7 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teacher,course}) =>
                 
               >
                 {semester.map(sem=> 
-                (<MenuItem value={sem.sem_id}>Sem:{sem.sem_number} Year:{sem.year} </MenuItem>))
+                (<MenuItem key={sem.sem_id} value={sem.sem_id}>Sem:{sem.sem_number} Year:{sem.year} </MenuItem>))
                 }
                
               </Select>
@@ -317,7 +317,7 @@ const CreateDialog = ({data,setOpen,open,refetch,semester,teacher,course}) =>
              
               >
                 {teacher.map(teacher=> 
-                (<MenuItem value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
+                (<MenuItem key={teacher.user_id} value={teacher.user_id}>{`${teacher.f_name} ${teacher.l_name}`}  </MenuItem>))
                 }
                
               </Select>

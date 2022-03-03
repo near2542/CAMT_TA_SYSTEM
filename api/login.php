@@ -58,7 +58,7 @@ try{
                 "id" => $row['user_id'],
                 "iat" => time(),
                 "nbf" => time()+10,
-                "exp"=> time() +(60*60),
+                "exp"=> time() +(20),
             );
             $JWT = JWT::encode($payload,$key);
             setcookie('refresh_token',JWT::encode($payload,$refresh_key),time()+60*60*24*7);
@@ -69,10 +69,10 @@ try{
                 ]));
             }
         
-            die(json_encode(['error'=>'Email or Password not correct','status'=>401]));
+            die(json_encode(['error'=>'Username or Password is not correct','status'=>401]));
     }
     else {
-        die(json_encode(['error'=>'Email or Password not correct','status'=>401]));
+        die(json_encode(['error'=>'Username or Password is not correct','status'=>401]));
     }
         
     }

@@ -11,8 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import {useDispatch } from 'react-redux'
-import {LoginAction} from '../store/auth';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -63,11 +61,10 @@ export  function  Login() {
   
   useEffect(()=>
   {
-    if(auth.id) navigate('/home',{replace:true})
+    if(auth?.id) navigate('/home',{replace:true})
    
   },[auth,navigate])
 
-  const dispatch = useDispatch();
 
   const classes = useStyles();
   const [OnSubmit,setOnSubmit] = useState(false);
@@ -83,16 +80,14 @@ export  function  Login() {
     e.preventDefault();
     setOnSubmit(!OnSubmit)
     try{
-    const {status,data} = await axios.post('/login.php',user);
-    console.log('does this still work')
-    console.log(data)
+    const {data} = await axios.post('/login.php',user);
     
     if(!data.ACCESS_TOKEN) throw new Error(data.error);
       
     let success = await LoginUser(user.username,user.password)
     console.log(success)
     if(success) navigate('/home')
-    setLoginError(null);
+    setLoginError(null);  
     }
     catch(err)
     {
