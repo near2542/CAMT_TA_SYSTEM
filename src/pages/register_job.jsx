@@ -140,6 +140,7 @@ export const RegisterJob = () => {
       setSemester(semester.data);
     }
     catch (err) {
+      console.log('test')
 
       navigate('/auth',{replace:true});
       console.log(err.number);

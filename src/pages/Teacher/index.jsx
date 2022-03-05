@@ -57,13 +57,11 @@ export const Teacher = () => {
   dispatch(title(titleName));
 
   const classes = useStyles();
-  const majorList = useSelector((state) => state.master);
   const [currentModal,setCurrentModal] = useState();
   const [createOpen,setCreateOpen] = useState(false)
   const [editOpen,setEditOpen] = useState(false)
   const [deleteOpen,setDeleteOpen] = useState(false)
-  const [open, setOpen] = useState(false);
-  const [tableHeader, SetTableHeader] = useState([]);
+  
 
   const [SearchBy, setSearchBy] = useState("All");
   useEffect(async() => {

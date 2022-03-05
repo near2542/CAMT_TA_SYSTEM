@@ -150,6 +150,8 @@ export const AssignCourse = () => {
     }
     catch(err)
     {
+      console.log('test')
+
       console.log('its error')
       navigate('/auth',{replace:true});
       console.log(err.number);

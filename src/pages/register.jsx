@@ -51,7 +51,7 @@ export function Register() {
   const {auth} = useAuth()
   useEffect(()=>
   {
-    if(auth.id) navigate('/home',{replace:true})
+    if(auth.id) return navigate('/home',{replace:true})
    
   },[auth,navigate])
   const dispatch = useDispatch();
@@ -130,7 +130,9 @@ export function Register() {
     setError({...formError,username:{status:false,message:''}})
     console.log(response);
     alert('create success');
-    navigate.push('/auth',{replace:true});
+    console.log('test')
+
+    navigate('/auth',{replace:true});
     }
     catch(err)
     {

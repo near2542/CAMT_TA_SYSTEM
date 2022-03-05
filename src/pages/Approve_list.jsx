@@ -121,7 +121,6 @@ export const ApprovedList = () => {
     }
     catch (err) {
 
-     navigate('/auth',{replace:true});
       console.log(err.number);
     }
     if (state.role == 4) {

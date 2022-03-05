@@ -142,6 +142,7 @@ export const RequestTA = () => {
     }
     catch(err)
     {
+      console.log('test')
          
       navigate('/auth',{replace:true});
       console.log(err.number);

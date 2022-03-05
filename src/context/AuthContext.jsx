@@ -2,8 +2,8 @@ import { createContext, useState } from 'react'
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 import { useContext } from 'react'
-import { Logout } from '../pages/logout'
-import { useNavigate } from 'react-router-dom'
+// import { Logout } from '../pages/logout'
+import { useNavigate,Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 const AuthContext = createContext(null)
 
@@ -51,8 +51,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (!auth.isSignin) {
             let storage = localStorage.getItem('TAcamt-Auth');
-            if(!storage) {console.log('test');return navigate('/home',{replace:true})}
-            console.log(storage)
+            if(!storage) {console.log('test') ; return <Navigate to='/auth'  replace/> }
             let ACCESS_TOKEN = JSON.parse(storage);
             console.log(ACCESS_TOKEN)
             let decode = jwtDecode(ACCESS_TOKEN)
@@ -64,6 +63,7 @@ export const AuthProvider = ({ children }) => {
                 let role = decode.role
                 let isSignin = !!decode
                 setAuth(state => { return {...state,user_id, username, role, exp, isSignin } })
+                console.log('test cant go register')
                 return navigate('/home')
             }
             else { console.log('here in false');localStorage.removeItem('TAcamt-Auth');return navigate('/auth') }
