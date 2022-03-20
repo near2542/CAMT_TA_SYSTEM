@@ -121,7 +121,7 @@ export const Course = () => {
       <div>
         <Searchbox searchValue={searchValue} setSearch={setSearch} options={options.current} />
             <div className={classes.create}>
-          <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>
+         {state.role === 1 &&  <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>Create</Button>}
             </div>
         {/* <Divider /> */}
         <TableContainer component={Paper}>
@@ -132,6 +132,7 @@ export const Course = () => {
           >
             <TableHead>
               <TableRow>
+                {console.log(Data)}
                 {tableHeader.map((Data) => (
                   <TableCell key={Data}>{Data}</TableCell>
                 ))}
@@ -141,7 +142,6 @@ export const Course = () => {
               {filterCourse?.map(data =>
               (<>
                 <TableRow key={`id_${data.course_id}`}>
-
                   <TableCell >{data.course_id}</TableCell>
                   <TableCell >{data.course_name}</TableCell>
                   <TableCell >{data.major_name}</TableCell>

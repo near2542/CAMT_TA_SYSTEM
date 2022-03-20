@@ -6,7 +6,7 @@ import { resetAccess } from '../../store/auth';
 import ResponsiveDrawer from './sidebar';
 export default function ProtectedRoute({children,...rest}) {
     // const navigate = useNavigate();
-    let {auth,checkTokenExp} = useAuth()
+    let {auth,checkTokenExp} = useAuth();
      
     let location = useLocation()
     
